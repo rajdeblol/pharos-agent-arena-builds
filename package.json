@@ -1,0 +1,13 @@
+{
+  "name": "pharos-agent-arena-builds",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": ["01-read-contract-state", "02-policy-gatekeeper"],
+  "scripts": {
+    "contract": "npm run start --workspace=pharos-contract-field-notes",
+    "gatekeeper": "npm run start --workspace=policy-gatekeeper",
+    "showcase": "python3 -m http.server 4175 --directory showcase"
+  },
+  "engines": { "node": ">=20" }
+}
