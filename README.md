@@ -4,7 +4,7 @@ Small, independent builds for Pharos Season of AI. Each task has its own folder 
 
 **Live showcase:** [pharos-agent-arena-builds.vercel.app](https://pharos-agent-arena-builds.vercel.app/)
 
-The home page and both demos open in white mode. Use the top-right control to switch between white and dark; subtle motion respects reduced-motion settings.
+The home page and demos open in white mode. Use the top-right control to switch between white and dark; subtle motion respects reduced-motion settings.
 
 ## Builds
 
@@ -12,7 +12,7 @@ The home page and both demos open in white mode. Use the top-right control to sw
 |---|---|---|---|---:|---|---|
 | 01 | Read Contract State | Chain MCP | Easy | 50 | [01-read-contract-state](./01-read-contract-state/) | [Open demo](https://pharos-contract-field-notes.vercel.app/) |
 | 02 | Policy Gatekeeper | SkillEngine | Medium | 100 | [02-policy-gatekeeper](./02-policy-gatekeeper/) | [Open demo](https://pharos-policy-gatekeeper-five.vercel.app/) |
-| 03 | Event Log Monitor | Chain MCP | Easy | 50 | [03-event-log-monitor](./03-event-log-monitor/) | Deploy pending |
+| 03 | Event Log Monitor | Chain MCP | Easy | 50 | [03-event-log-monitor](./03-event-log-monitor/) | [Open demo](https://pharos-event-log-monitor.vercel.app/) |
 
 ## Quick start
 
@@ -27,7 +27,7 @@ In another terminal, run the policy demo:
 
     npm run gatekeeper
 
-The contract reader listens on http://localhost:4173; the policy demo listens on http://localhost:4174. Both task folders include their own README with implementation notes. The showcase is static and can be previewed with npm run showcase or served from Vercel.
+The contract reader listens on http://localhost:4173; the policy demo listens on http://localhost:4174; the event monitor listens on http://localhost:4176. Each task folder includes its own README with implementation notes. The showcase is static and can be previewed with npm run showcase or served from Vercel.
 
 Run the event monitor with `npm run event-monitor`; it listens on http://localhost:4176.
 
