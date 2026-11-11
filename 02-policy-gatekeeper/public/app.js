@@ -4,6 +4,7 @@ const $ = id => document.getElementById(id);
 const form = $('request-form'), amountInput = $('amount'), destinationInput = $('destination');
 const decisionBox = $('decision'), ledgerBody = $('ledger');
 const readJSON = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
+const utcDay = at => new Date(at).toISOString().slice(0, 10);
 let activePolicy = readJSON('gatekeeper-policy', policy);
 if (validatePolicy(activePolicy).length) activePolicy = structuredClone(policy);
 let log = readJSON('gatekeeper-ledger', null);
@@ -27,7 +28,6 @@ const scenarios = {
   time: { amount: 84, destination: policy.allowedDestinations[0], at: '2026-11-11T22:15:00Z' }
 };
 const addressLabel = address => `${String(address).slice(0, 6)}…${String(address).slice(-4)}`;
-const utcDay = at => new Date(at).toISOString().slice(0, 10);
 function dailySpendBefore(at) {
   const day = utcDay(at);
   const cents = log.reduce((sum, row) => row.result === 'allow' && row.executed && utcDay(row.at) === day ? sum + Math.round(Number(row.amount) * 100) : sum, 0);
