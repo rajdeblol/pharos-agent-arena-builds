@@ -13,7 +13,7 @@ The home page and demos open in white mode. Use the top-right control to switch 
 | 01 | Read Contract State | Chain MCP | Easy | 50 | [01-read-contract-state](./01-read-contract-state/) | [Open demo](https://pharos-contract-field-notes.vercel.app/) |
 | 02 | Policy Gatekeeper | SkillEngine | Medium | 100 | [02-policy-gatekeeper](./02-policy-gatekeeper/) | [Open demo](https://pharos-policy-gatekeeper-five.vercel.app/) |
 | 03 | Event Log Monitor | Chain MCP | Easy | 50 | [03-event-log-monitor](./03-event-log-monitor/) | [Open demo](https://pharos-event-log-monitor.vercel.app/) |
-| 04 | Docs MCP Onboarding | Developer Docs MCP | Easy | 50 | [04-docs-mcp-onboarding](./04-docs-mcp-onboarding/) | Deploy pending |
+| 04 | Docs MCP Onboarding | Developer Docs MCP | Easy | 50 | [Live demo](https://pharos-docs-mcp-onboarding.vercel.app/) · [Source](./04-docs-mcp-onboarding/) | Live |
 
 ## Quick start
 
