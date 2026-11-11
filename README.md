@@ -2,6 +2,8 @@
 
 Small, independent builds for Pharos Season of AI. Each task has its own folder and can be run on its own; showcase/ is a simple front door to the live demos.
 
+**Live showcase:** [pharos-agent-arena-builds.vercel.app](https://pharos-agent-arena-builds.vercel.app/)
+
 ## Builds
 
 | # | Task | Track | Tier | Points | Folder | Demo |
