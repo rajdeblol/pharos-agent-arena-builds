@@ -14,6 +14,7 @@ The home page and demos open in white mode. Use the top-right control to switch 
 | 02 | Policy Gatekeeper | SkillEngine | Medium | 100 | [02-policy-gatekeeper](./02-policy-gatekeeper/) | [Open demo](https://pharos-policy-gatekeeper-five.vercel.app/) |
 | 03 | Event Log Monitor | Chain MCP | Easy | 50 | [03-event-log-monitor](./03-event-log-monitor/) | [Open demo](https://pharos-event-log-monitor.vercel.app/) |
 | 04 | Docs MCP Onboarding | Developer Docs MCP | Easy | 50 | [Live demo](https://pharos-docs-mcp-onboarding.vercel.app/) · [Source](./04-docs-mcp-onboarding/) | Live |
+| 05 | Arbitrage Scanner | Chain MCP | Hard | 200 | [05-arbitrage-scanner](./05-arbitrage-scanner/) | [Open demo](https://pharos-arbitrage-scanner.vercel.app/) |
 
 ## Quick start
 
@@ -40,12 +41,14 @@ Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-m
     02-policy-gatekeeper/     spend, allowlist, and time-window checkpoint
     03-event-log-monitor/     live ERC-20 Transfer feed via Chain MCP
     04-docs-mcp-onboarding/   docs-only onboarding log and gaps
+    05-arbitrage-scanner/     two-source read-only arbitrage comparison
     showcase/                 static landing page for the demos
 
 ## Notes
 
 - Each task remains a small standalone app inside this collection.
 - The policy demo is simulation-only; it does not sign or submit transactions.
+- The scanner is read-only and simulation-only. It never signs or submits swaps; token-to-USD and slippage inputs are estimates.
 - The linked demos are deployed separately. This repository's Vercel project serves the collection showcase.
 - Approval and point totals are awarded by Agent Arena reviewers; this repository makes no claim that either submission has been approved.
 
