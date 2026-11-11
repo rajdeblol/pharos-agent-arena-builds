@@ -14,6 +14,10 @@ The demo executor is a stub. It returns a simulated reference; it does not conne
 3. Open **Edit policy config**, change a value in the JSON (for example `dailySpendCap`), and choose **Apply config**. The setting is saved in this browser. **Reset defaults** restores the shipped policy.
 4. Submit a request. An allow is marked **SIMULATED**; a deny is marked **NOT RUN**. The UTC-day total counts only locally recorded allowed demo actions.
 
+## Visual direction
+
+The UI uses Pharos brand cues: Pharos Blue (`#0113B7`), black (`#0B0B0B`), light gray (`#DFE3E5`), white, and a Helvetica Neue sans-serif stack. PP Neue Montreal is listed first as the brand display face; systems without it fall back to Helvetica Neue/Arial. The wordmark stays text-based rather than copying the official logo. Reference: [Pharos official brand kit](https://www.pharos.xyz/brandkit).
+
 ## Run locally
 
 Requires Node.js 20 or newer.
