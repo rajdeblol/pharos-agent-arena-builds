@@ -5,5 +5,9 @@
   "type": "module",
   "description": "A read-only, fee-aware Pharos pool scanner with simulated decisions.",
   "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test",
+    "verify:deployment": "node scripts/verify-deployment.mjs"
+  },
   "dependencies": { "@modelcontextprotocol/sdk": "^1.12.1" }
 }
