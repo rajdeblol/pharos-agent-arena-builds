@@ -4,6 +4,8 @@ A small read-only token reader for Pharos. Paste an ERC-20 address and it reads 
 
 The UI doesn't ask for a wallet connection. The server makes read-only MCP calls; it never asks for a key or broadcasts a transaction.
 
+The page starts in white mode. Use the top-right control to switch between white and dark.
+
 ## Run it
 
 Needs Node.js 20 or newer.

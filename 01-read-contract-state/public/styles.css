@@ -131,3 +131,18 @@ h1 span { color: #0113B7; }
   .address-card { padding: 19px; }.input-wrap input { font-size: 9px; }.result-topline { align-items: flex-start; flex-direction: column; gap: 10px; }
   .explorer-link { display: none; }.metrics { grid-template-columns: 1fr 100px; }.metric-value { font-size: 22px; }.read-receipt { flex-wrap: wrap; }
 }
+
+.theme-toggle { border: 1px solid var(--line); border-radius: 999px; padding: 7px 11px; background: transparent; color: var(--ink); font: 9px var(--mono); letter-spacing: .07em; cursor: pointer; }
+.theme-toggle:hover { border-color: var(--green); color: var(--green); }
+.address-card,.result-panel { border-radius: 14px; box-shadow: 0 5px 0 #0113b710; }
+.read-button { border-radius: 10px; }
+:root[data-theme="dark"] { color-scheme: dark; color: #F7F8FA; background: #0B0B0B; --paper: #0B0B0B; --ink: #F7F8FA; --muted: #A8AFBA; --line: #343840; --green: #91A2FF; }
+:root[data-theme="dark"] .network-chip { color: #D5DAE2; border-color: var(--line); background: #12151A; }
+:root[data-theme="dark"] .address-card,:root[data-theme="dark"] .result-panel { background: #14171C; border-color: var(--line); box-shadow: 0 5px 0 #0113b733; }
+:root[data-theme="dark"] .input-wrap input { background: #0B0B0B; color: #F7F8FA; border-color: #454B55; }
+:root[data-theme="dark"] .read-button { background: #0113B7; color: #fff; border-color: #7285FF; }
+:root[data-theme="dark"] h1 span,:root[data-theme="dark"] .top-link,:root[data-theme="dark"] .explorer-link { color: #91A2FF; }
+:root[data-theme="dark"] .wordmark-sub,:root[data-theme="dark"] .intro-copy,:root[data-theme="dark"] .intro-aside,:root[data-theme="dark"] .eyebrow,:root[data-theme="dark"] .field-note,:root[data-theme="dark"] .privacy-note,:root[data-theme="dark"] .card-kicker,:root[data-theme="dark"] .empty-state > span,:root[data-theme="dark"] .loading-state > span,:root[data-theme="dark"] .snapshot-status,:root[data-theme="dark"] .metric-caption,:root[data-theme="dark"] .address-line > span,:root[data-theme="dark"] .address-line code,:root[data-theme="dark"] .read-receipt,:root[data-theme="dark"] .recipe-items span,:root[data-theme="dark"] .footer { color: #A8AFBA; }
+:root[data-theme="dark"] .raw-values { background: #20242B; }
+:root[data-theme="dark"] .recipe-items code,:root[data-theme="dark"] .read-receipt strong { color: #F7F8FA; }
+:root[data-theme="dark"] .theme-toggle { border-color: #6578EA; color: #F7F8FA; }

@@ -4,6 +4,8 @@ Small, independent builds for Pharos Season of AI. Each task has its own folder 
 
 **Live showcase:** [pharos-agent-arena-builds.vercel.app](https://pharos-agent-arena-builds.vercel.app/)
 
+The home page and both demos open in white mode. Use the top-right control to switch between white and dark.
+
 ## Builds
 
 | # | Task | Track | Tier | Points | Folder | Demo |

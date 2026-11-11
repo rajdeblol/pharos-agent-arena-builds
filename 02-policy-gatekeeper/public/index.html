@@ -6,7 +6,7 @@
   <title>Policy Gatekeeper — Pharos Fieldwork</title><link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-  <header class="topbar"><a class="wordmark" href="#top"><span class="mark">F.</span><span>FIELDWORK <small>BUILT ON PHAROS</small></span></a><div class="top-meta"><span class="live-dot"></span>LOCAL POLICY LAB <span class="mono">/ 01</span></div><a class="source-link" href="https://pharos-agent-arena.vercel.app/tasks/policy-gatekeeper" target="_blank" rel="noreferrer">PHAROS ARENA ↗</a></header>
+  <header class="topbar"><a class="wordmark" href="#top"><span class="mark">F.</span><span>FIELDWORK <small>BUILT ON PHAROS</small></span></a><div class="top-meta"><span class="live-dot"></span>LOCAL POLICY LAB <span class="mono">/ 01</span></div><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">DARK</button><a class="source-link" href="https://pharos-agent-arena.vercel.app/tasks/policy-gatekeeper" target="_blank" rel="noreferrer">PHAROS ARENA ↗</a></header>
   <main id="top">
     <section class="intro"><div class="eyebrow">SKILL ENGINE <span>·</span> SAFETY LAYER <span>·</span> MEDIUM</div><div class="title-row"><h1>Policy<br><em>Gatekeeper</em></h1><div class="intro-note"><span class="note-index">01 / WHY THIS EXISTS</span><p>An agent can move quickly. The policy should make it stop for the right reasons.</p></div></div><div class="intro-bottom"><p class="lede">A small, explicit checkpoint between an agent’s intent and its action. Every request gets a reasoned decision; only approved requests reach the demo executor.</p><div class="sim-label"><span class="shield">⌑</span> SIMULATION ONLY <small>NO WALLET · NO TRANSACTIONS</small></div></div></section>
     <section class="workspace">
@@ -26,5 +26,20 @@
     </section>
     <section class="audit"><div class="audit-heading"><div class="section-head"><span>03</span><h2>Decision ledger</h2></div><p class="panel-caption">Every check is appended with its outcome, deciding rule, and timestamp. Stored in this browser only.</p></div><div class="ledger-tools"><span id="ledger-count" class="mono">04 ENTRIES</span><button id="clear-log" type="button">Clear ledger <span>↗</span></button></div><div class="table-wrap"><table><thead><tr><th>TIME</th><th>REQUEST</th><th>DESTINATION</th><th>DECISION</th><th>DECIDING RULE</th><th>RULE TRACE</th><th>EXECUTOR</th></tr></thead><tbody id="ledger"></tbody></table></div><div id="empty-ledger" class="empty-ledger" hidden>No decisions yet. Submit a request to start the ledger.</div></section>
     <footer><span class="wordmark small-wordmark"><span class="mark">F.</span> FIELDWORK</span><span>Policy before action. Reason alongside decision.</span><a href="https://github.com/PharosNetwork/pharos-skill-engine" target="_blank" rel="noreferrer">BUILT FOR PHAROS SKILL ENGINE ↗</a></footer>
-  </main><script type="module" src="/app.js"></script>
+  </main><script>
+    const themeButton = document.getElementById('theme-toggle');
+    function setTheme(mode) {
+      document.documentElement.dataset.theme = mode;
+      document.querySelector('meta[name="theme-color"]').content = mode === 'dark' ? '#0B0B0B' : '#ffffff';
+      themeButton.textContent = mode === 'dark' ? 'WHITE' : 'DARK';
+      themeButton.setAttribute('aria-pressed', String(mode === 'dark'));
+      themeButton.setAttribute('aria-label', `Switch to ${mode === 'dark' ? 'white' : 'dark'} theme`);
+    }
+    setTheme(localStorage.getItem('pharos-theme') === 'dark' ? 'dark' : 'light');
+    themeButton.addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('pharos-theme', next);
+      setTheme(next);
+    });
+  </script><script type="module" src="/app.js"></script>
 </body></html>

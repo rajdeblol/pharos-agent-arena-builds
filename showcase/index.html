@@ -6,11 +6,20 @@
   <title>Pharos Builds — Raj Deb</title>
   <style>
     :root{--paper:#ffffff;--ink:#0B0B0B;--muted:#666b70;--line:#DFE3E5;--orange:#0113B7;--green:#2c6c50;--mono:ui-monospace,SFMono-Regular,Menlo,monospace;--sans:'PP Neue Montreal','Helvetica Neue',Helvetica,Arial,sans-serif;--display:'PP Neue Montreal','Helvetica Neue',Helvetica,Arial,sans-serif}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:14px var(--sans)}a{color:inherit}.bar{height:70px;border-bottom:1px solid var(--line);padding:0 6vw;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:10px;font:700 10px var(--mono);letter-spacing:.12em}.mark{display:grid;place-items:center;background:var(--orange);color:#fff;width:31px;height:31px;font:800 18px var(--display);letter-spacing:-.08em}.bar a,.footer a{font:10px var(--mono);letter-spacing:.08em;text-decoration:none}.bar a:hover,.footer a:hover{color:var(--orange)}main{max-width:1160px;margin:auto;padding:0 6vw}.hero{padding:77px 0 38px;border-bottom:1px solid var(--line)}.eyebrow,.section-kicker,.index,.meta,.label{font:10px var(--mono);letter-spacing:.09em;color:var(--muted)}.eyebrow span{color:var(--orange);padding:0 7px}.hero-grid{display:grid;grid-template-columns:1fr 260px;align-items:end;gap:40px;margin:25px 0 24px}.hero h1{font:600 clamp(56px,9vw,104px)/.92 var(--display);letter-spacing:-.085em;margin:0}.hero h1 em{font-weight:400;color:var(--orange)}.aside{border-left:1px solid var(--orange);padding:3px 0 3px 16px}.aside p{font:500 15px/1.5 var(--display);margin:12px 0 0}.bottom{display:flex;align-items:end;justify-content:space-between;gap:30px}.bottom p{margin:0;color:#62645c;line-height:1.7;max-width:540px}.count{font:10px var(--mono);color:#686a62;white-space:nowrap}.count b{color:var(--orange);font-weight:500}.section{padding:29px 0 34px}.section-head{display:flex;align-items:baseline;gap:11px;margin-bottom:20px}.section-head .index{color:var(--orange)}h2{font:700 19px var(--display);letter-spacing:-.04em;margin:0}.cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{border:1px solid #DFE3E5;background:#F3F5F6;padding:22px;display:flex;flex-direction:column;min-height:290px;transition:transform .18s,border-color .18s}.card:hover{transform:translateY(-2px);border-color:#0113B7}.card-top{display:flex;justify-content:space-between;align-items:center}.task-no{font:10px var(--mono);color:var(--orange)}.tier{font:9px var(--mono);letter-spacing:.08em;border:1px solid var(--line);padding:5px 7px;color:#696b64}.track{margin:23px 0 8px;font:9px var(--mono);letter-spacing:.09em;color:var(--muted)}.card h3{font:700 23px var(--display);letter-spacing:-.055em;margin:0}.desc{margin:9px 0 22px;color:#707269;font-size:12px;line-height:1.55;max-width:410px}.details{border-top:1px solid var(--line);padding-top:13px;margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}.status{font:9px var(--mono);letter-spacing:.06em;color:var(--green);display:flex;align-items:center;gap:6px}.status i{width:6px;height:6px;border-radius:50%;background:#59916e}.links{display:flex;gap:14px}.links a{font:10px var(--mono);text-decoration:none}.links a:first-child{color:var(--orange)}.links a:hover{text-decoration:underline}.approvals{border-top:1px solid var(--line);padding:17px 0;display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:11px}.approvals strong{font:10px var(--mono);font-weight:400;color:var(--ink)}.footer{border-top:1px solid var(--line);padding:20px 0 27px;display:flex;justify-content:space-between;gap:20px;align-items:center;color:var(--muted);font-size:10px}.footer a{font-size:9px}.foot-brand{font:700 9px var(--mono);letter-spacing:.1em;color:var(--ink)}
+    .theme-toggle{border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:transparent;color:var(--ink);font:9px var(--mono);letter-spacing:.07em;cursor:pointer}.theme-toggle:hover{border-color:var(--orange);color:var(--orange)}.bar{margin:18px auto 0;border:1px solid var(--line);border-radius:15px;box-shadow:0 5px 0 #0113b71c}.mark{border-radius:9px;box-shadow:0 3px 0 #0113b755}.card{border-radius:16px;box-shadow:0 4px 0 #0113b710}.tier{border-radius:999px}.details{border-radius:0 0 10px 10px}.links a{border-bottom:1px solid transparent}.links a:hover{border-color:var(--orange)}
+    :root[data-theme="dark"]{color-scheme:dark;--paper:#0B0B0B;--ink:#F7F8FA;--muted:#A8AFBA;--line:#343840;--orange:#91A2FF;--green:#69D5A3}
+    :root[data-theme="dark"] body{background-color:#0B0B0B;background-image:linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:24px 24px}
+    :root[data-theme="dark"] .bar{background:#101216;border-color:#454B55;box-shadow:0 5px 0 #0113b755}
+    :root[data-theme="dark"] .mark{background:#0113B7;color:#fff}
+    :root[data-theme="dark"] .card{background:#14171C;border-color:#343840;box-shadow:0 4px 0 #0113b733}
+    :root[data-theme="dark"] .desc,:root[data-theme="dark"] .bottom p,:root[data-theme="dark"] .tier{color:#A8AFBA}
+    :root[data-theme="dark"] .tier{border-color:#454B55}
+    :root[data-theme="dark"] .theme-toggle{border-color:#6578EA;color:#F7F8FA}
     @media(max-width:650px){.bar{height:60px;padding:0 5vw}.bar a{font-size:8px}main{padding:0 5vw}.hero{padding:48px 0 28px}.hero-grid{grid-template-columns:1fr;gap:20px}.hero h1{font-size:clamp(56px,14vw,86px)}.aside{max-width:290px}.bottom{align-items:flex-start;flex-direction:column;gap:12px}.cards{grid-template-columns:1fr}.card{min-height:260px}.footer{flex-wrap:wrap}.footer>span:nth-child(2){order:3;width:100%}}
   </style>
 </head>
 <body>
-  <header class="bar"><div class="brand"><span class="mark">R.</span><span>RAJ DEB <span style="display:block;color:var(--muted);font-size:8px;margin-top:3px">PHAROS BUILDS</span></span></div><a href="https://github.com/rajdeblol/pharos-agent-arena-builds">SOURCE REPO ↗</a></header>
+  <header class="bar"><div class="brand"><span class="mark">R.</span><span>RAJ DEB <span style="display:block;color:var(--muted);font-size:8px;margin-top:3px">PHAROS BUILDS</span></span></div><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">DARK</button><a href="https://github.com/rajdeblol/pharos-agent-arena-builds">SOURCE REPO ↗</a></header>
   <main>
     <section class="hero"><div class="eyebrow">PHAROS SEASON OF AI <span>·</span> BUILD LOG</div><div class="hero-grid"><h1>Small tools.<br><em>Clear jobs.</em></h1><aside class="aside"><span class="section-kicker">A COLLECTION, IN PROGRESS</span><p>One folder per task. Live demos beside the source, so the work is easy to browse and try.</p></aside></div><div class="bottom"><p>Two independent builds for the Pharos Agent Arena: one reads token state through Chain MCP; the other puts an explicit policy check in front of a simulated action.</p><span class="count"><b>02</b> BUILDS · <b>02</b> LIVE DEMOS</span></div></section>
     <section class="section"><div class="section-head"><span class="index">01</span><h2>Build index</h2><span class="section-kicker">SOURCE + LIVE DEMO</span></div><div class="cards">
@@ -19,5 +28,21 @@
     </div><div class="approvals"><span>Task points are listed from the Arena brief; reviewer approval determines awarded points.</span><strong>APPROVAL STATUS IS SET BY THE ARENA</strong></div></section>
     <footer class="footer"><span class="foot-brand">PHAROS BUILDS / 2026</span><span>Small tools, documented close to the code.</span><a href="https://pharos-agent-arena.vercel.app/#tasks">PHAROS AGENT ARENA ↗</a></footer>
   </main>
+  <script>
+    const themeButton = document.getElementById('theme-toggle');
+    function setTheme(mode) {
+      document.documentElement.dataset.theme = mode;
+      document.querySelector('meta[name="theme-color"]').content = mode === 'dark' ? '#0B0B0B' : '#ffffff';
+      themeButton.textContent = mode === 'dark' ? 'WHITE' : 'DARK';
+      themeButton.setAttribute('aria-pressed', String(mode === 'dark'));
+      themeButton.setAttribute('aria-label', `Switch to ${mode === 'dark' ? 'white' : 'dark'} theme`);
+    }
+    setTheme(localStorage.getItem('pharos-theme') === 'dark' ? 'dark' : 'light');
+    themeButton.addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('pharos-theme', next);
+      setTheme(next);
+    });
+  </script>
 </body>
 </html>
