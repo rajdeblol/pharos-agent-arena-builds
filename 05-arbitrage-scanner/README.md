@@ -21,18 +21,6 @@ The two venues here are DODO V2 and a FaroSwap V2 WPROS/USDC pool. They are two 
 7. It quotes both directions, calculates a reserve-ratio spread and estimated cost waterfall, reads the current gas price, and compares the resulting net estimate with the threshold.
 8. The browser renders the result and adds a row to the current page's scan log.
 
-```mermaid
-flowchart LR
-  UI[Scan settings] --> API[POST /api/scan]
-  API --> MCP[Pharos Chain MCP]
-  MCP --> DODO[DODO pool state and query quotes]
-  MCP --> FARO[FaroSwap reserves and fee]
-  DODO --> CALC[Route and cost calculation]
-  FARO --> CALC
-  CALC --> GATE{Net profit above threshold?}
-  GATE -->|No| SKIP[SKIP with reason]
-  GATE -->|Yes| PREP[SIMULATED_PREPARE summary]
-```
 
 ## Pool and token defaults
 
