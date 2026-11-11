@@ -11,6 +11,13 @@
     @media(max-width:700px){.shell{padding:0 19px}.hero{padding-top:45px}.hero-grid{grid-template-columns:1fr;gap:15px}.hero h1{font-size:clamp(54px,14vw,78px)}.aside{max-width:300px}.steps,.gaps{grid-template-columns:1fr}.outcome{grid-template-columns:1fr;gap:8px}.section-head span:last-child{max-width:120px;text-align:right}.footer{padding:13px 0;flex-wrap:wrap}.footer span:last-child{width:100%}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
   </style>
+  <style>
+    .live-session{margin:24px 0 30px;border:1px solid var(--line);background:var(--soft);padding:18px}.live-head{display:flex;align-items:center;justify-content:space-between;gap:14px}.live-title{display:flex;align-items:center;gap:9px}.live-title h2{font-size:16px}.live-chip{display:inline-flex;align-items:center;gap:6px;color:#438765;font:8px var(--mono);letter-spacing:.06em}.live-chip:before{content:"";width:6px;height:6px;border-radius:50%;background:#58a47b}.live-chip.busy:before{animation:pulse 1s infinite}.run-button{border:1px solid var(--blue);border-radius:3px;background:var(--blue);color:#fff;padding:9px 12px;font:9px var(--mono);cursor:pointer}.run-button:hover{filter:brightness(1.13)}.run-button:disabled,.step-run:disabled{opacity:.55;cursor:wait}.live-note{margin:11px 0 15px;color:#7b818a;font:9px/1.6 var(--mono)}.live-rows{display:grid;gap:8px}.live-row{border:1px solid var(--line);background:var(--paper);padding:12px}.live-row-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.live-row-title{font:600 11px Arial,sans-serif}.step-run{border:1px solid var(--line);border-radius:3px;background:transparent;color:var(--blue);padding:6px 8px;font:8px var(--mono);cursor:pointer}.live-query{margin:9px 0 0;color:#6d737c;font:9px/1.6 var(--mono)}.live-answer{display:block;max-height:270px;overflow:auto;margin:10px 0 0;padding:12px;border-left:2px solid var(--blue);background:var(--soft);color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere;font:10px/1.7 var(--mono)}.live-meta{margin-top:11px;color:#858b93;font:8px var(--mono)}.live-meta.error{color:#b14b42}.live-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px}.reset-button{border:0;background:transparent;color:#858b93;font:8px var(--mono);text-decoration:underline;cursor:pointer;padding:5px}.live-foot small{color:#858b93;font:8px/1.4 var(--mono)}
+    :root[data-theme=dark] .live-note,:root[data-theme=dark] .live-query,:root[data-theme=dark] .live-meta,:root[data-theme=dark] .live-foot small{color:#a8afba}:root[data-theme=dark] .live-row{background:#0e1014}:root[data-theme=dark] .step-run,:root[data-theme=dark] .reset-button{color:#aab4ff}
+    @keyframes pulse{50%{box-shadow:0 0 0 4px #58a47b33}}
+    @media(max-width:700px){.live-session{padding:13px}.live-head{align-items:flex-start;flex-direction:column}.run-button{width:100%}.live-foot{align-items:flex-start;flex-direction:column}}
+    @media(prefers-reduced-motion:reduce){.live-chip.busy:before{animation:none}}
+  </style>
   <script>document.documentElement.dataset.theme=localStorage.getItem('pharos-theme')==='dark'?'dark':'light';</script>
 </head>
 <body>
@@ -18,6 +25,12 @@
     <header class="topbar"><a class="brand" href="https://pharos-agent-arena-builds.vercel.app/"><span class="mark">P</span><span>PHAROS <small>/ DOCS FIELD LOG</small></span></a><button class="toggle" id="themeToggle" type="button" aria-pressed="false">DARK</button></header>
     <main>
       <section class="hero"><div class="eyebrow">DEVELOPER DOCS MCP / ONBOARDING NOTES</div><div class="hero-grid"><div><h1>Getting started<br><span>got redirected.</span></h1><p class="lede">I asked Pharos Developer Docs MCP to walk me into <code>ai.pharos.xyz</code>. The MCP worked; its onboarding answers mostly led to Anvita Flow and a local Skill Engine setup instead.</p></div><aside class="aside">READ ONLY · NO WALLET<strong>Docs MCP answered.<br>The product path stayed unclear.</strong>4 QUESTIONS · 4 GAPS</aside></div></section>
+      <section class="live-session" aria-labelledby="liveTitle"><div class="live-head"><div class="live-title"><span class="live-chip" id="liveChip">LIVE MCP</span><h2 id="liveTitle">Run the onboarding questions</h2></div><button class="run-button" id="runAll" type="button">Run all 4 questions ↗</button></div><p class="live-note">Sends the same four questions below to Pharos Developer Docs MCP now. Read-only; no wallet or transaction involved.</p><div class="live-rows" id="liveRows">
+        <article class="live-row" data-step="1"><div class="live-row-head"><span class="live-row-title">01 · Find the first step</span><button class="step-run" type="button" data-run-step="1">Run question ↗</button></div><p class="live-query">I am starting from zero on ai.pharos.xyz. Using only the Pharos developer docs, give me a concise first-session path: account/setup, first agent or skill, and one safe way to try it.</p><pre class="live-answer" hidden></pre></article>
+        <article class="live-row" data-step="2"><div class="live-row-head"><span class="live-row-title">02 · Try the documented skill route</span><button class="step-run" type="button" data-run-step="2">Run question ↗</button></div><p class="live-query">What exact steps and tool/API calls do the docs give for creating and running a first SkillEngine skill on ai.pharos.xyz? Include required config fields and a minimal example.</p><pre class="live-answer" hidden></pre></article>
+        <article class="live-row" data-step="3"><div class="live-row-head"><span class="live-row-title">03 · Try a read-only chain query</span><button class="step-run" type="button" data-run-step="3">Run question ↗</button></div><p class="live-query">How do I make my first read-only on-chain query with Pharos Chain MCP? Give exact tool names and argument shapes for chain info, contract reads, and event logs.</p><pre class="live-answer" hidden></pre></article>
+        <article class="live-row" data-step="4"><div class="live-row-head"><span class="live-row-title">04 · Ask how to share proof</span><button class="step-run" type="button" data-run-step="4">Run question ↗</button></div><p class="live-query">How do I create a shareable link from ai.pharos.xyz to prove my completed onboarding to the Pharos Agent Arena? Give the exact steps in that product.</p><pre class="live-answer" hidden></pre></article>
+      </div><div class="live-foot"><small id="liveStatus" aria-live="polite">Ready · no live request sent yet</small><button class="reset-button" id="resetRun" type="button">Clear live answers</button></div></section>
       <section><div class="section-head"><span class="number">01</span><h2>What I tried</h2><span>IN ORDER · DOCS MCP ONLY</span></div><div class="steps">
         <article class="step"><div class="step-head"><span class="step-no">01</span><h3>Find the first step</h3></div><p>I asked for a beginner path into the site. The answer said the available guide covers Anvita Flow, not <code>ai.pharos.xyz</code>.</p><div class="tools"><span>askQuestion</span><span>read answer + cited pages</span></div></article>
         <article class="step"><div class="step-head"><span class="step-no">02</span><h3>Try the documented skill route</h3></div><p>The MCP returned local package setup, Foundry, Claude Code, and a Piggy Bank example. Hosting steps pointed to Anvita Flow’s Service Agent console.</p><div class="tools"><span>askQuestion</span><span>getPage</span></div></article>
@@ -30,7 +43,7 @@
         <article class="gap-card"><div class="gap-top"><b>MCP argument shapes stop at JSON-RPC</b><span class="gap-tag">SCHEMA GAP</span></div><p><strong>What came back:</strong> The docs list tool names and JSON-RPC `params`; the MCP answer explicitly could not confirm exact `arguments` schemas. The `Pharos MCP` page has no per-tool MCP input examples.</p><p><strong>Suggested fix:</strong> Show copyable MCP call examples and expected results for <code>get_chain_info</code>, <code>eth_call</code>, and filtered <code>get_logs</code>.</p><details class="query"><summary>Exact query</summary><blockquote>How do I make my first read-only on-chain query with Pharos Chain MCP? Give exact tool names and argument shapes for chain info, contract reads, and event logs.</blockquote></details></article>
         <article class="gap-card"><div class="gap-top"><b>No reviewer-shareable proof steps</b><span class="gap-tag">MISSING STEPS</span></div><p><strong>What came back:</strong> The answer says the docs don’t explain creating an onboarding share link in <code>ai.pharos.xyz</code> or submitting one to Agent Arena.</p><p><strong>Suggested fix:</strong> Document how to share a project/chat, whether reviewers need an account, and how to check the link opens for someone else.</p><details class="query"><summary>Exact query</summary><blockquote>How do I create a shareable link from ai.pharos.xyz to prove my completed onboarding to the Pharos Agent Arena? Give the exact steps in that product.</blockquote></details></article>
       </div></section>
-      <section class="outcome"><div><span class="number">03</span><h2>What I managed</h2></div><div><p>I connected to Developer Docs MCP and used <code>askQuestion</code>, <code>searchDocumentation</code>, and <code>getPage</code> to trace the onboarding route and verify the gaps against the cited pages. I did not reach an <code>ai.pharos.xyz</code> workspace or run a Pharos Skill there; the docs never gave me a verified route to do that. This page is the working onboarding log and proof of the attempt.</p><div class="source-row"><a href="https://docs.pharos.xyz/tooling-and-infrastructure/mcp" target="_blank" rel="noreferrer">PHAROS MCP DOC ↗</a><a href="https://docs.pharos.xyz/tooling-and-infrastructure/overview" target="_blank" rel="noreferrer">ANVITA FLOW OVERVIEW ↗</a><a href="https://docs.pharos.xyz/tooling-and-infrastructure/pharos-skill-engine-guide" target="_blank" rel="noreferrer">SKILL ENGINE GUIDE ↗</a><a href="https://docs.pharos.xyz/tooling-and-infrastructure/overview/publish-skill-af" target="_blank" rel="noreferrer">PUBLISHING GUIDE ↗</a></div></div></section>
+      <section class="outcome"><div><span class="number">03</span><h2>What I managed</h2></div><div><p>I connected to Developer Docs MCP and used <code>askQuestion</code>, <code>searchDocumentation</code>, and <code>getPage</code> to trace the onboarding route and verify the gaps against the cited pages. The live panel can send those four onboarding questions to Docs MCP again. I did not reach an <code>ai.pharos.xyz</code> workspace or run a Pharos Skill there; the docs never gave me a verified route to do that.</p><div class="source-row"><a href="https://docs.pharos.xyz/tooling-and-infrastructure/mcp" target="_blank" rel="noreferrer">PHAROS MCP DOC ↗</a><a href="https://docs.pharos.xyz/tooling-and-infrastructure/overview" target="_blank" rel="noreferrer">ANVITA FLOW OVERVIEW ↗</a><a href="https://docs.pharos.xyz/tooling-and-infrastructure/pharos-skill-engine-guide" target="_blank" rel="noreferrer">SKILL ENGINE GUIDE ↗</a><a href="https://docs.pharos.xyz/tooling-and-infrastructure/overview/publish-skill-af" target="_blank" rel="noreferrer">PUBLISHING GUIDE ↗</a></div></div></section>
     </main>
     <footer class="footer"><span>PHAROS / DOCS MCP ONBOARDING</span><a href="https://pharos-agent-arena.vercel.app/tasks/docs-mcp-onboarding">ARENA TASK ↗</a><span>DOCS MCP ONLY · NO EXTERNAL DOCS</span></footer>
   </div>
@@ -39,6 +52,64 @@
     function setTheme(mode){document.documentElement.dataset.theme=mode;document.querySelector('meta[name="theme-color"]').content=mode==='dark'?'#0b0b0b':'#fff';button.textContent=mode==='dark'?'WHITE':'DARK';button.setAttribute('aria-pressed',String(mode==='dark'));button.setAttribute('aria-label',`Switch to ${mode==='dark'?'white':'dark'} theme`)}
     setTheme(document.documentElement.dataset.theme||'light');
     button.addEventListener('click',()=>{const mode=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.setItem('pharos-theme',mode);setTheme(mode)});
+  </script>
+  <script>
+    const runAll=document.getElementById('runAll');
+    const runButtons=[...document.querySelectorAll('[data-run-step]')];
+    const liveStatus=document.getElementById('liveStatus');
+    const liveChip=document.getElementById('liveChip');
+    const resetRun=document.getElementById('resetRun');
+    let running=false;
+    let runHadError=false;
+    async function runStep(step,index,total){
+      const row=document.querySelector(`[data-step="${step}"]`);
+      const answer=row.querySelector('.live-answer');
+      answer.hidden=false;
+      answer.textContent='Asking Docs MCP…';
+      liveChip.classList.add('busy');
+      liveStatus.textContent=total>1?`Running question ${index} of ${total} · waiting for Docs MCP…`:`Running question ${step} · waiting for Docs MCP…`;
+      try{
+        const response=await fetch('/api/onboard',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({step})});
+        const payload=await response.json();
+        if(!response.ok)throw new Error(payload.error||`Request failed (${response.status})`);
+        answer.textContent=payload.answer;
+        liveStatus.textContent=`Answered via ${payload.tool} · ${new Date(payload.checkedAt).toLocaleString()} · ${payload.endpoint}`;
+      }catch(error){
+        answer.textContent=`This question did not complete. ${error.message}`;
+        runHadError=true;
+        liveStatus.textContent='Request failed · try this question again in a moment';
+        liveStatus.classList.add('error');
+      }
+    }
+    function setRunning(value){
+      running=value;
+      runAll.disabled=value;
+      runButtons.forEach((item)=>item.disabled=value);
+      resetRun.disabled=value;
+      liveChip.classList.toggle('busy',value);
+      if(!value&&liveStatus.textContent.startsWith('Running'))liveStatus.textContent='Ready · no live request sent yet';
+    }
+    runAll.addEventListener('click',async()=>{
+      if(running)return;
+      runHadError=false;
+      liveStatus.classList.remove('error');
+      setRunning(true);
+      try{for(let step=1;step<=4;step++)await runStep(step,step,4)}
+      finally{setRunning(false);liveStatus.textContent=runHadError?`Run finished with an error · ${new Date().toLocaleString()}`:`Run complete · 4 questions sent to Docs MCP · ${new Date().toLocaleString()}`;liveStatus.classList.toggle('error',runHadError)}
+    });
+    runButtons.forEach((item)=>item.addEventListener('click',async()=>{
+      if(running)return;
+      runHadError=false;
+      liveStatus.classList.remove('error');
+      setRunning(true);
+      try{await runStep(item.dataset.runStep,1,1)}finally{setRunning(false)}
+    }));
+    resetRun.addEventListener('click',()=>{
+      document.querySelectorAll('.live-answer').forEach((item)=>{item.hidden=true;item.textContent=''});
+      runHadError=false;
+      liveStatus.classList.remove('error');
+      liveStatus.textContent='Ready · no live request sent yet';
+    });
   </script>
 </body>
 </html>

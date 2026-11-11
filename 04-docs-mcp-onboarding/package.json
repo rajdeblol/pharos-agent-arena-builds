@@ -2,5 +2,8 @@
   "name": "pharos-docs-mcp-onboarding",
   "version": "1.0.0",
   "private": true,
-  "description": "A static field log for onboarding with Pharos Developer Docs MCP."
+  "type": "module",
+  "description": "An interactive onboarding log for Pharos Developer Docs MCP.",
+  "engines": { "node": ">=20" },
+  "dependencies": { "@modelcontextprotocol/sdk": "^1.12.1" }
 }
