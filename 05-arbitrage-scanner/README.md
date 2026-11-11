@@ -48,6 +48,8 @@ DODO's `querySellBase` and `querySellQuote` quotes include the pool's own quote 
 
 All reserve and quote values from the EVM are integer quantities. Token decimals are applied when converting values for display and USD estimates.
 
+The submitted trade size is converted to raw token units from its decimal string, using integer arithmetic. Inputs with more fractional digits than the base token supports are rejected instead of being rounded through JavaScript floating point. The route's base-token profit is also calculated from the integer difference between output and input before conversion to USD.
+
 ### Mid-price and gross spread
 
 For each venue, the scanner estimates a spot mid-price from its reserve ratio:
@@ -156,7 +158,7 @@ npm install
 npx vercel dev
 ```
 
-Open the local URL printed by Vercel. The static page is in `public/`; the serverless endpoint is `api/scan.mjs`. The API accepts a JSON `POST /api/scan` request. It uses the public Pharos Chain MCP endpoint by default; set `PHAROS_MCP_URL` only when using another compatible MCP server.
+Open the local URL printed by Vercel. The static page is in `public/`; Vercel maps `api/scan.mjs` to the serverless `POST /api/scan` endpoint, which imports its implementation from `src/scan-handler.mjs`. Shared calculations live in `src/calculations.mjs`. The endpoint uses the public Pharos Chain MCP endpoint by default; set `PHAROS_MCP_URL` only when using another compatible MCP server.
 
 To deploy this task by itself, import the GitHub repository into Vercel and set the project root directory to `05-arbitrage-scanner`. The included `vercel.json` sets `public/` as the static output and gives the scan function a 60-second maximum duration.
 
@@ -171,6 +173,22 @@ To deploy this task by itself, import the GitHub repository into Vercel and set 
 | Use safe or simulated execution | The app is read-only and never submits trades | `SIMULATED_PREPARE` is a JSON preview only; no wallet or transaction path exists |
 
 The last requirement is handled as a simulation. This build does not generate a transaction or calldata, so reviewers should treat it as a safe threshold-decision demo rather than an executing arbitrage Skill.
+
+## Repository structure
+
+| Path | Purpose |
+|---|---|
+| `api/scan.mjs` | Vercel route adapter for `POST /api/scan` |
+| `src/` | Scanner handler and reusable calculation modules |
+| `public/` | Completed static website |
+| `test/` | Offline unit and API contract tests |
+| `scripts/` | Deployment configuration verification |
+| `vercel.json` | Static output and serverless function configuration |
+| `SKILL.md` | Project-specific development and safety instructions |
+
+There is no database, so this project has no migrations. It has no bundled frontend build, TypeScript, Rollup, or Cloudflare Worker runtime, so those configurations are intentionally not part of this repository.
+
+Run `npm test` for the offline test suite and `npm run verify:deployment` to check the Vercel output and API route configuration. A hosted Vercel production build still depends on the deployment platform; this repository does not define a local build command.
 
 ## Limitations
 
