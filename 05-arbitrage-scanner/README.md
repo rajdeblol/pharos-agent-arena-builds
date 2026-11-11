@@ -205,3 +205,6 @@ The app has no wallet connection, private-key input, signing method, or transact
 - [Source folder](https://github.com/rajdeblol/pharos-agent-arena-builds/tree/main/05-arbitrage-scanner)
 - [Arena task brief](https://pharos-agent-arena.vercel.app/tasks/arbitrage-scanner)
 - [Pharos Chain MCP endpoint](https://mcp.pharos.xyz/mcp)
+
+AI assistance was used while creating the UI and README.
+The pool reads, calculations, assumptions, and safety limits are documented above.
