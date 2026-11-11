@@ -6,7 +6,7 @@ A small safety check between an agent request and an action. It explains each de
 
 ## Try it
 
-Open the demo and choose a sample request, or enter an amount and destination. Expand **Edit policy config** to change the rules. Changes are saved in your browser; **Reset defaults** restores the original settings. The page opens in white mode; use the top-right control to switch themes.
+Open the demo and choose a sample request, or enter an amount and destination. Expand **Edit policy config** to change the rules. Changes are saved in your browser; **Reset defaults** restores the original settings. The page opens in white mode; use the top-right control to switch themes. Motion is subtle and respects reduced-motion settings.
 
 The default policy allows up to **$250 per request** and **$500 per UTC day**, sends only to two approved addresses, and runs on weekdays from **09:00 to 17:00 UTC**. The end time is exclusive. Address matching ignores letter case.
 

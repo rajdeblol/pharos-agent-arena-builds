@@ -146,3 +146,24 @@ h1 span { color: #0113B7; }
 :root[data-theme="dark"] .raw-values { background: #20242B; }
 :root[data-theme="dark"] .recipe-items code,:root[data-theme="dark"] .read-receipt strong { color: #F7F8FA; }
 :root[data-theme="dark"] .theme-toggle { border-color: #6578EA; color: #F7F8FA; }
+
+body::before { content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(#0113B70A 1px, transparent 1px), linear-gradient(90deg, #0113B70A 1px, transparent 1px), radial-gradient(ellipse at 16% 15%, #0113B710, transparent 34%); background-size: 28px 28px, 28px 28px, auto; }
+.page-shell { position: relative; z-index: 1; }
+.topbar { position: relative; z-index: 1; border-radius: 0 0 14px 14px; background: color-mix(in srgb, var(--paper) 90%, transparent); backdrop-filter: blur(14px); }
+.mark { color: #0113B7; border-color: #0113B7; transition: transform .35s ease, background .25s ease, color .25s ease; }
+.wordmark:hover .mark { transform: rotate(18deg); background: #0113B7; color: #fff; }
+.address-card,.result-panel { position: relative; isolation: isolate; overflow: hidden; border-radius: 18px; box-shadow: 0 5px 0 #0113B71A, 0 16px 40px #0B0B0B08; transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease; animation: pharos-rise .65s cubic-bezier(.2,.75,.25,1) both; }
+.result-panel { animation-delay: .1s; }
+.address-card::before,.result-panel::before { content: ""; position: absolute; inset: 0 0 auto; height: 2px; background: linear-gradient(90deg, transparent, #0113B7, #7D6AFF, transparent); opacity: .65; }
+.address-card:hover,.result-panel:hover { transform: translateY(-3px); border-color: #0113B755; box-shadow: 0 7px 0 #0113B71f, 0 22px 48px #0113B710; }
+.read-button { position: relative; overflow: hidden; box-shadow: 0 4px 0 #0113B744; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
+.read-button:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #0113B755; }
+.read-button:active { transform: translateY(1px); box-shadow: 0 1px 0 #0113B744; }
+.recipe-items > div { transition: color .2s ease, transform .25s ease; }
+.recipe-items > div:hover { transform: translateY(-3px); }
+.live-dot,.status-dot { animation: pharos-beacon 2.2s ease-in-out infinite; }
+:root[data-theme="dark"] body::before { background-image: linear-gradient(#ffffff09 1px, transparent 1px), linear-gradient(90deg, #ffffff09 1px, transparent 1px), radial-gradient(ellipse at 16% 15%, #0113B755, transparent 34%); }
+:root[data-theme="dark"] .address-card:hover,:root[data-theme="dark"] .result-panel:hover { border-color: #91A2FF88; box-shadow: 0 7px 0 #0113B755, 0 22px 48px #0113B733; }
+@keyframes pharos-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pharos-beacon { 50% { box-shadow: 0 0 0 6px #0113B719; } }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
