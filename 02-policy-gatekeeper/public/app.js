@@ -13,6 +13,13 @@ if (!Array.isArray(log)) log = [
   { at: '2026-11-11T12:32:10Z', amount: 84, destination: '0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef', result: 'deny', rule: 'destination allowlist', executed: false },
   { at: '2026-11-11T22:15:00Z', amount: 84, destination: policy.allowedDestinations[0], result: 'deny', rule: 'time window', executed: false }
 ];
+const dailyTotals = new Map();
+[...log].sort((a, b) => new Date(a.at) - new Date(b.at)).forEach(row => {
+  const day = utcDay(row.at);
+  const before = dailyTotals.get(day) || 0;
+  if (!row.checks) row.checks = evaluateAction({ amount: row.amount, asset: 'USD', destination: row.destination, at: row.at, dailySpendBefore: before }, activePolicy).checks;
+  if (row.result === 'allow' && row.executed) dailyTotals.set(day, before + Math.round(Number(row.amount) * 100) / 100);
+});
 const scenarios = {
   allow: { amount: 84, destination: policy.allowedDestinations[0], at: '2026-11-11T12:30:00Z' },
   spend: { amount: 420, destination: policy.allowedDestinations[0], at: '2026-11-11T12:30:00Z' },
