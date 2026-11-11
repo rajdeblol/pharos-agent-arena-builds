@@ -1,0 +1,10 @@
+{
+  "name": "pharos-event-log-monitor",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A live ERC-20 Transfer log monitor for Pharos mainnet via Chain MCP.",
+  "scripts": { "start": "node server.mjs" },
+  "dependencies": { "@modelcontextprotocol/sdk": "^1.12.1" },
+  "engines": { "node": ">=20" }
+}

@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "workspaces": ["01-read-contract-state", "02-policy-gatekeeper"],
+  "workspaces": ["01-read-contract-state", "02-policy-gatekeeper", "03-event-log-monitor"],
   "scripts": {
     "contract": "npm run start --workspace=pharos-contract-field-notes",
     "gatekeeper": "npm run start --workspace=policy-gatekeeper",
-    "showcase": "python3 -m http.server 4175 --directory showcase"
+    "showcase": "python3 -m http.server 4175 --directory showcase",
+    "event-monitor": "npm run start --workspace=pharos-event-log-monitor"
   },
   "engines": { "node": ">=20" }
 }

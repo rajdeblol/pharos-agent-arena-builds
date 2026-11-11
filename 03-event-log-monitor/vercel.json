@@ -1,0 +1,5 @@
+{
+  "outputDirectory": "public",
+  "functions": { "api/events.mjs": { "maxDuration": 60 } },
+  "cleanUrls": true
+}

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff"><title>Event Log Monitor — Pharos</title>
+  <meta name="description" content="Watch ERC-20 Transfer logs on Pharos mainnet, decoded and refreshed live through Chain MCP.">
+  <link rel="stylesheet" href="/styles.css">
+  <script>document.documentElement.dataset.theme=localStorage.getItem('pharos-theme')==='dark'?'dark':'light';</script>
+  <script src="/app.js" type="module"></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar"><a class="wordmark" href="https://pharos.xyz"><span class="mark">P</span><span>PHAROS <span class="wordmark-sub">/ FIELDWORK</span></span></a><div class="top-actions"><span class="network-chip"><i id="liveDot"></i><span id="networkLabel">MAINNET · 1672</span></span><button id="themeToggle" class="theme-toggle" type="button" aria-pressed="false">DARK</button></div></header>
+    <main>
+      <section class="hero"><div class="eyebrow"><span class="eyebrow-line"></span>CHAIN MCP / EVENT LOGS</div><div class="hero-row"><div><h1>See what<br><span>moves.</span></h1><p class="intro-copy">A live view of ERC-20 Transfer events on Pharos. Filter by contract, then follow each log back to the block and transaction.</p></div><div class="hero-aside"><span>READ ONLY</span><strong>NO WALLET<br>REQUIRED</strong><span id="checkedAt">Waiting for first scan</span></div></div></section>
+      <section class="workspace" aria-label="Event monitor">
+        <aside class="control-card"><div class="card-kicker"><span>01</span> MONITOR SETUP</div><label for="token">TOKEN CONTRACT</label><div class="input-wrap"><input id="token" spellcheck="false" autocomplete="off" aria-describedby="tokenNote"><button id="clearToken" type="button" title="Reset to USDC">RESET</button></div><p class="field-note" id="tokenNote">Pharos Pacific Mainnet · ERC-20 only</p><div class="preset-row"><span class="example-label">QUICK PICK</span><button class="preset" id="usdcPreset" type="button">USDC <span>↗</span></button></div><label class="lookback-label" for="lookback">HISTORY WINDOW</label><div class="select-wrap"><select id="lookback"><option value="100">Last 100 blocks</option><option value="200" selected>Last 200 blocks</option><option value="500">Last 500 blocks</option><option value="1000">Last 1,000 blocks</option></select></div><button id="watchButton" class="read-button" type="button"><span>Start monitoring</span><span class="button-arrow">↗</span></button><p class="privacy-note">↗ Queries public chain data through Pharos Chain MCP.</p></aside>
+        <section class="result-panel"><div class="panel-head"><div><div class="card-kicker"><span>02</span> TRANSFER FEED</div><h2 id="feedTitle">No contract selected</h2></div><div class="feed-actions"><span id="feedStatus" class="feed-status"><i></i> IDLE</span><button id="pauseButton" type="button" disabled>PAUSE</button></div></div>
+          <div class="stats"><div class="stat"><span>BLOCK HEIGHT</span><strong id="blockHeight">—</strong></div><div class="stat"><span>EVENTS FOUND</span><strong id="eventCount">—</strong></div><div class="stat"><span>SCANNED FROM</span><strong id="blockFrom">—</strong></div></div>
+          <div id="message" class="message empty"><span class="empty-bars"><i></i><i></i><i></i></span><strong>Ready when you are</strong><span>Start a scan to load recent Transfer logs.</span></div>
+          <div class="table-wrap" id="tableWrap" hidden><div class="table-head"><span>BLOCK / KIND</span><span>FROM → TO</span><span>AMOUNT</span><span>TRANSACTION</span></div><div id="eventRows" class="event-rows"></div><div class="table-foot"><span id="rangeLabel">—</span><a id="explorerLink" target="_blank" rel="noreferrer">VIEW CONTRACT ↗</a></div></div>
+          <footer class="panel-foot"><span><i class="status-dot"></i> <span id="sourceLabel">PHAROS CHAIN MCP</span></span><span>AUTO REFRESH · 8 SEC</span></footer>
+        </section>
+      </section>
+      <section class="note-strip"><span>HOW IT WORKS</span><p>Scans a bounded block window for the standard ERC-20 Transfer signature. Each event is keyed by transaction hash and log index, with a small overlap on refresh to catch logs indexed late.</p><a href="https://pharos-agent-arena-builds.vercel.app/">ALL BUILDS ↗</a></section>
+    </main>
+    <footer class="footer"><span>PHAROS FIELDWORK / EVENT LOG MONITOR</span><a href="https://mcp.pharos.xyz/mcp" target="_blank" rel="noreferrer">PHAROS CHAIN MCP ↗</a><span>READ ONLY · NO TRANSACTION SIGNING</span></footer>
+  </div>
+</body>
+</html>
