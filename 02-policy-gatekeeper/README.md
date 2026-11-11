@@ -1,6 +1,6 @@
 # Policy Gatekeeper
 
-A small policy checkpoint for the Pharos SkillEngine task. It checks each requested action against a spend ceiling, destination allowlist, and UTC weekday window. The first failed check returns `deny` with the rule and reason; `runGuarded` never invokes the executor in that case. Every decision is recorded in a browser-local ledger.
+A small policy checkpoint for the Pharos SkillEngine task. It checks each requested action against a spend ceiling, destination allowlist, and UTC weekday window. Every rule runs on every request and the UI keeps a pass/fail trace; the first failed check decides the deny reason. `runGuarded` never invokes the executor for a denied request. Each decision and its rule trace are recorded in a browser-local ledger.
 
 ## Run locally
 
