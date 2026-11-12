@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "workspaces": ["01-read-contract-state", "02-policy-gatekeeper", "03-event-log-monitor", "06-doc-search-cli"],
+  "workspaces": ["01-read-contract-state", "02-policy-gatekeeper", "03-event-log-monitor", "06-doc-search-cli", "07-on-chain-alert-bot"],
   "scripts": {
     "contract": "npm run start --workspace=pharos-contract-field-notes",
     "gatekeeper": "npm run start --workspace=policy-gatekeeper",
     "showcase": "python3 -m http.server 4175 --directory showcase",
-    "event-monitor": "npm run start --workspace=pharos-event-log-monitor"
+    "event-monitor": "npm run start --workspace=pharos-event-log-monitor",
+    "onchain-alert": "npm run telegram-bot --workspace=pharos-on-chain-alert-bot"
   },
   "engines": { "node": ">=20" }
 }

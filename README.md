@@ -16,6 +16,7 @@ The home page and demos open in white mode. Use the top-right control to switch 
 | 04 | Docs MCP Onboarding | Developer Docs MCP | Easy | 50 | [04-docs-mcp-onboarding](./04-docs-mcp-onboarding/) | [Open demo](https://pharos-docs-mcp-onboarding.vercel.app/) |
 | 05 | Arbitrage Scanner | Chain MCP | Hard | 200 | [05-arbitrage-scanner](./05-arbitrage-scanner/) | [Open demo](https://pharos-arb-scanner-raj.vercel.app/) |
 | 06 | Doc-Search CLI | Developer Docs MCP | Easy | 50 | [06-doc-search-cli](./06-doc-search-cli/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/doc-search) |
+| 07 | On-Chain Alert Bot | Chain MCP · Telegram | Easy | 50 | [07-on-chain-alert-bot](./07-on-chain-alert-bot/) | [Bot setup](./07-on-chain-alert-bot/README.md) |
 
 ## Quick start
 
@@ -36,6 +37,8 @@ Run the event monitor with `npm run event-monitor`; it listens on http://localho
 
 Run the docs search CLI with `cd 06-doc-search-cli && npm ci && npm link`, then use `pharos-docs "your question"`.
 
+Run the Telegram on-chain alert worker with `npm run onchain-alert`. Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in `07-on-chain-alert-bot/.env.local` locally or as private environment values on the always-on worker host described in its README.
+
 Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-mcp-onboarding/public`.
 
 ## Layout
@@ -46,6 +49,7 @@ Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-m
     04-docs-mcp-onboarding/   docs-only onboarding log and gaps
     05-arbitrage-scanner/     two-source read-only arbitrage comparison
     06-doc-search-cli/        sourced Pharos docs answers from a terminal
+    07-on-chain-alert-bot/    read-only ERC-20 transfer alerts sent to Telegram
     showcase/                 static landing page for the demos
 
 ## Notes

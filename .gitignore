@@ -4,3 +4,5 @@ node_modules/
 .env.*
 !.env.example
 .DS_Store
+07-on-chain-alert-bot/.state.json
+07-on-chain-alert-bot/.state.json.tmp
