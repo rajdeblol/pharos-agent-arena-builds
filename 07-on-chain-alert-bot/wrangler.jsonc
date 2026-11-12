@@ -11,7 +11,7 @@
     {
       "binding": "DB",
       "database_name": "pharos-alert-state",
-      "database_id": "SET_AFTER_CREATING_D1_DATABASE",
+      "database_id": "9e86b186-4a39-4523-a985-db3b8d0c499a",
       "migrations_dir": "migrations"
     }
   ],
