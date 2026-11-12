@@ -167,7 +167,7 @@ async function sendMessage(token, chatId, text, html = false) {
   });
 }
 
-function helpText() {
+function startText() {
   return [
     "Pharos On-Chain Alert Bot",
     "QUICK START",
@@ -181,7 +181,6 @@ function helpText() {
     "/watch <token-address> <minimum> [wallet-address] — start a custom watch",
     "/status — show the active token, minimum, and last scanned block",
     "/pause — stop the current watch",
-    "/help — show these instructions",
     "TIMING",
     "Command replies are immediate. Pharos is scanned once per minute, so transfer alerts may take up to a minute.",
     "The first scan sets a baseline. Only later matching transfers alert; past transfers are not replayed.",
@@ -203,8 +202,8 @@ async function processUpdate(env, credentials, update) {
       const actualChatId = String(message.chat?.id || "");
       if (command === "/start" && actualChatId !== credentials.chatId && message.chat?.type === "private") {
         await sendMessage(credentials.botToken, actualChatId, `The bot is online, but this chat is not configured yet. Set TELEGRAM_CHAT_ID to ${actualChatId} in the Cloudflare Worker secrets, then send /start again.`);
-      } else if (actualChatId === credentials.chatId && (command === "/start" || command === "/help")) {
-        await sendMessage(credentials.botToken, credentials.chatId, helpText());
+      } else if (actualChatId === credentials.chatId && command === "/start") {
+        await sendMessage(credentials.botToken, credentials.chatId, startText());
       } else if (actualChatId === credentials.chatId && command === "/sample") {
         await env.DB.prepare("UPDATE bot_state SET token = ?, minimum = ?, wallet = NULL, last_block = NULL, symbol = NULL, decimals = NULL WHERE id = 1")
           .bind(SAMPLE_TOKEN_ADDRESS, "1").run();
@@ -212,7 +211,7 @@ async function processUpdate(env, credentials, update) {
       } else if (actualChatId === credentials.chatId && command === "/watch") {
         const watch = parseWatchCommand(text);
         if (!watch) {
-          await sendMessage(credentials.botToken, credentials.chatId, "Usage: /watch <token-address> <minimum> [wallet-address]. Use a valid Pharos ERC-20 address.");
+          await sendMessage(credentials.botToken, credentials.chatId, `Usage: /watch <token-address> <minimum-token-amount> [wallet-address]. The minimum is a token amount, not a time interval. Example: /watch ${SAMPLE_TOKEN_ADDRESS} 1. Use /sample for a quick test.`);
         } else {
           await env.DB.prepare("UPDATE bot_state SET token = ?, minimum = ?, wallet = ?, last_block = NULL WHERE id = 1")
             .bind(watch.token, watch.minimum, watch.wallet || null).run();
@@ -227,7 +226,7 @@ async function processUpdate(env, credentials, update) {
           ? `Monitoring active.\nToken: ${latest.token}\nMinimum: ${latest.minimum}\nWallet filter: ${latest.wallet || "none"}\nLast block: ${latest.last_block ?? "baseline pending"}`
           : "Monitoring is paused. Use /watch <token-address> <minimum> [wallet-address] to start.");
       } else if (actualChatId === credentials.chatId) {
-        await sendMessage(credentials.botToken, credentials.chatId, "Unknown command. Send /help for options.");
+        await sendMessage(credentials.botToken, credentials.chatId, "Unknown command. Send /start for instructions.");
       }
     }
 
@@ -384,6 +383,6 @@ export default {
         else telegramStatus = "telegram_request_failed";
       }
     }
-    return Response.json({ service: "Pharos On-Chain Alert Bot", bot, telegramStatus, commands: ["/watch", "/sample", "/pause", "/status", "/help"], scanInterval: "1 minute" });
+    return Response.json({ service: "Pharos On-Chain Alert Bot", bot, telegramStatus, commands: ["/watch", "/sample", "/pause", "/status"], scanInterval: "1 minute" });
   },
 };
