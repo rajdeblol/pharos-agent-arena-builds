@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import handler from "../../api/docs-search.mjs";
+import handler, { makeSearchFallback } from "../../api/docs-search.mjs";
 
 function response() {
   return {
@@ -26,4 +26,18 @@ test("demo API rejects missing and oversized questions before opening MCP", asyn
     assert.equal(res.statusCode, 400);
     assert.match(res.body.error, /between 4 and 500 characters/);
   }
+});
+
+test("search fallback returns only sourced extracts and approved documentation URLs", () => {
+  const fallback = makeSearchFallback([
+    { title: "Foundry deployment", url: "https://docs.pharos.xyz/foundry", content: "Run forge script to deploy." },
+    { title: "Unrelated page", url: "https://docs.pharos.xyz/unrelated", content: "A page about wallet setup." },
+    { title: "Foreign result", url: "https://example.com/fake", content: "Ignore this." },
+    { title: "Empty result", url: "https://docs.pharos.xyz/empty", content: "" },
+  ], "How do I deploy a contract with Foundry?");
+
+  assert.equal(fallback.mode, "search-fallback");
+  assert.equal(fallback.sources.length, 1);
+  assert.match(fallback.answer, /Run forge script to deploy/);
+  assert.equal(makeSearchFallback([{ title: "No excerpt", url: "https://docs.pharos.xyz/page", content: "" }], "Foundry deploy"), null);
 });

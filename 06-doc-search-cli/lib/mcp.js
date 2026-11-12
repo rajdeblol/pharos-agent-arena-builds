@@ -2,7 +2,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 
 export const DOCS_MCP_URL = process.env.PHAROS_DOCS_MCP_URL ?? "https://docs.pharos.xyz/~gitbook/mcp";
-const REQUEST_TIMEOUT_MS = 15_000;
+const REQUEST_TIMEOUT_MS = 12_000;
 const RETRIES = 2;
 
 function isRetryable(error) {
@@ -19,8 +19,13 @@ export async function connectDocsMcp(url = DOCS_MCP_URL) {
   }
 
   const client = new Client({ name: "pharos-doc-search-cli", version: "1.0.0" });
-  await client.connect(new StreamableHTTPClientTransport(endpoint), { timeout: REQUEST_TIMEOUT_MS });
-  return client;
+  try {
+    await client.connect(new StreamableHTTPClientTransport(endpoint), { timeout: REQUEST_TIMEOUT_MS });
+    return client;
+  } catch (error) {
+    await client.close().catch(() => {});
+    throw error;
+  }
 }
 
 export async function callWithRetry(operation, label, maxRetries = RETRIES) {
