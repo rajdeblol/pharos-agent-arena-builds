@@ -29,6 +29,7 @@ const HASH = /^0x[a-fA-F0-9]{64}$/;
 const AMOUNT = /^\d{1,30}(?:\.\d{1,36})?$/;
 const EXPLORER = "https://www.pharosscan.xyz";
 const WORKER_PUBLIC_URL = "https://pharos-on-chain-alert-bot.rajdeb1803.workers.dev";
+const SAMPLE_TOKEN_ADDRESS = "0xC879C018dB60520F4355C26eD1a6D572cdAC1815";
 
 function validateTelegramCredentials(token, chatId) {
   const botToken = String(token || "").trim();
@@ -170,10 +171,12 @@ function helpText() {
   return [
     "Pharos On-Chain Alert Bot",
     "/watch <token-address> <minimum> [wallet-address] — start monitoring",
+    "/sample — quick setup: watch Pharos USDC transfers of 1 USDC or more",
     "/pause — pause monitoring",
     "/status — show current settings",
     "/help — show commands",
-    "Use a Pharos Pacific ERC-20 token address.",
+    `Sample token: ${SAMPLE_TOKEN_ADDRESS}`,
+    "Scans run once per minute. Only transfers after the baseline can alert.",
   ].join("\n");
 }
 
@@ -193,6 +196,10 @@ async function processUpdate(env, credentials, update) {
         await sendMessage(credentials.botToken, actualChatId, `The bot is online, but this chat is not configured yet. Set TELEGRAM_CHAT_ID to ${actualChatId} in the Cloudflare Worker secrets, then send /start again.`);
       } else if (actualChatId === credentials.chatId && (command === "/start" || command === "/help")) {
         await sendMessage(credentials.botToken, credentials.chatId, helpText());
+      } else if (actualChatId === credentials.chatId && command === "/sample") {
+        await env.DB.prepare("UPDATE bot_state SET token = ?, minimum = ?, wallet = NULL, last_block = NULL, symbol = NULL, decimals = NULL WHERE id = 1")
+          .bind(SAMPLE_TOKEN_ADDRESS, "1").run();
+        await sendMessage(credentials.botToken, credentials.chatId, "Sample watch set for Pharos USDC (minimum 1 USDC). The next scan sets the baseline; new matching transfers are checked once per minute.");
       } else if (actualChatId === credentials.chatId && command === "/watch") {
         const watch = parseWatchCommand(text);
         if (!watch) {
@@ -368,6 +375,6 @@ export default {
         else telegramStatus = "telegram_request_failed";
       }
     }
-    return Response.json({ service: "Pharos On-Chain Alert Bot", bot, telegramStatus, commands: ["/watch", "/pause", "/status", "/help"], scanInterval: "1 minute" });
+    return Response.json({ service: "Pharos On-Chain Alert Bot", bot, telegramStatus, commands: ["/watch", "/sample", "/pause", "/status", "/help"], scanInterval: "1 minute" });
   },
 };
