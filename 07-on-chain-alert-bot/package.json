@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "A scheduled Telegram bot for Pharos ERC-20 transfer alerts.",
+  "description": "A Telegram bot for Pharos ERC-20 transfer alerts.",
   "scripts": {
     "dev": "npx --yes wrangler@4.50.0 dev --test-scheduled --config wrangler.jsonc",
     "deploy": "npx --yes wrangler@4.50.0 deploy --config wrangler.jsonc",

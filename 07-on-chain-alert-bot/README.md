@@ -1,22 +1,44 @@
 # Pharos On-Chain Alert Bot
 
-A Telegram bot for monitoring Pharos ERC-20 transfers. Telegram webhooks deliver commands directly to the Worker; Cloudflare Cron registers the webhook and scans the chain once a minute. D1 persists settings, scan cursor, Telegram update offset, and event IDs. The bot is read-only and never requests a wallet or private key.
+A read-only Telegram bot that watches Pharos Pacific ERC-20 transfers and sends alerts when they meet a minimum amount.
 
-## Telegram commands
+## Features
+
+- Watch a token and optional wallet with `/watch`.
+- Start a ready-to-use USDC example with `/sample`.
+- Receive command replies through Telegram webhooks.
+- Get transfer amount, sender, recipient, block, and PharosScan link in each alert.
+- Avoid duplicate event alerts with Cloudflare D1.
+
+Telegram commands reply through webhooks. The chain is scanned once per minute, so transfer alerts may take up to one scan interval. A watch starts from a new baseline; past transfers are not replayed.
+
+## Try the bot
+
+Open [@rajpharosbot](https://t.me/rajpharosbot) and send `/start`, then `/sample`.
+
+The sample watches Pharos USDC for transfers of at least 1 USDC:
 
 ```text
-/start
-/watch <token-address> <minimum> [wallet-address]
-/pause
-/status
-/help
+/watch 0xC879C018dB60520F4355C26eD1a6D572cdAC1815 1
 ```
 
-Only the private chat configured as `TELEGRAM_CHAT_ID` can control this bot. A `/watch` starts from the next current block, so past transfers do not alert. Alerts include value, sender, recipient, block, event ID, and a PharosScan link. Telegram command replies are webhook-driven; on-chain transfer alerts can lag by up to one scan interval.
+The address is Circle's [USDC contract on Pharos mainnet](https://www.circle.com/blog/now-available-usdc-cctp-on-pharos). Alerts require a matching transfer after the baseline; the bot does not create test events.
 
-## Free Cloudflare setup
+## Commands
 
-Requires Node.js 20+. From the repository root:
+```text
+/start or /help                  Show instructions
+/sample                          Watch Pharos USDC at a 1 USDC minimum
+/watch <token> <minimum> [wallet]
+/status                          Show the current watch
+/pause                           Stop monitoring
+```
+
+Only the private chat configured by `TELEGRAM_CHAT_ID` can control monitoring.
+
+## Deploy on Cloudflare
+
+Requires Node.js 20+ and Wrangler. From the repository root:
 
 ```sh
 npm install
@@ -24,7 +46,7 @@ cd 07-on-chain-alert-bot
 npm run db:create
 ```
 
-Copy the returned D1 database ID into `database_id` in `wrangler.jsonc`, then run:
+Set the returned database ID in `wrangler.jsonc`, then apply the schema, configure secrets, and deploy:
 
 ```sh
 npm run db:migrate:remote
@@ -33,9 +55,7 @@ npx wrangler secret put TELEGRAM_CHAT_ID
 npm run deploy
 ```
 
-Use a newly rotated token from [@BotFather](https://t.me/BotFather). Do not commit `.dev.vars` or paste the token into the website. Local development uses `.dev.vars` (copy `.dev.vars.example`) and `npm run db:migrate:local` before `npm run dev`.
-
-Cloudflare Workers Cron and D1 have free allowances suitable for this low-volume, one-minute watcher. Free-tier limits still apply; see [Workers limits](https://developers.cloudflare.com/workers/platform/limits/) and [D1 pricing](https://developers.cloudflare.com/d1/platform/pricing/).
+For local development, copy `.dev.vars.example` to `.dev.vars`, set local credentials, apply the local migration, and run `npm run dev`. Keep `.dev.vars` and bot tokens out of Git.
 
 ## Tests
 
