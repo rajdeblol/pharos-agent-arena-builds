@@ -16,6 +16,7 @@ const ignoredTerms = new Set([
   "the", "and", "for", "with", "from", "this", "that", "can", "could", "would", "should",
   "you", "your", "into", "about", "have", "has", "get", "use", "using", "pharos", "docs",
 ]);
+const frameworkTerms = new Set(["foundry", "hardhat", "ethers", "viem", "wagmi", "solidity", "web3"]);
 
 function searchTerms(question) {
   return [...new Set(String(question).toLowerCase().match(/[a-z0-9]+/g) ?? [])]
@@ -24,6 +25,7 @@ function searchTerms(question) {
 
 export function makeSearchFallback(results, question, resultMode = "search-fallback") {
   const terms = searchTerms(question);
+  const requestedFrameworks = terms.filter((term) => frameworkTerms.has(term));
   const uniqueTitles = new Set();
   const relevant = results.flatMap((result, index) => {
     try {
@@ -32,6 +34,7 @@ export function makeSearchFallback(results, question, resultMode = "search-fallb
       const title = plainText(result.title).toLowerCase();
       const content = plainText(result.content).toLowerCase();
       const path = url.pathname.toLowerCase();
+      if (requestedFrameworks.length && !requestedFrameworks.some((term) => title.includes(term) || path.includes(term))) return [];
       const score = terms.reduce((total, term) => total + (title.includes(term) ? 8 : 0) + (path.includes(term) ? 6 : 0) + (content.includes(term) ? 1 : 0), 0);
       const minScore = terms.length > 1 ? 2 : 1;
       return score >= minScore ? [{ ...result, score, index, normalizedTitle: title }] : [];

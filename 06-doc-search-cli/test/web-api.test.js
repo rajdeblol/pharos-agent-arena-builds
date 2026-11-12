@@ -54,7 +54,7 @@ test("search results rank the matching framework page and remove repeated titles
   const results = makeSearchFallback([
     { title: "Write Your First Uniswap Contract", url: "https://docs.pharos.xyz/developer-guide/hardhat/write-your-first-uniswap-contract", content: "Hardhat deployment steps for a contract." },
     { title: "Write Your First Uniswap Contract", url: "https://docs.pharos.xyz/developer-guide/foundry/write-your-first-uniswap-contract", content: "Foundry deployment steps using forge script." },
-    { title: "Canonical Contracts", url: "https://docs.pharos.xyz/getting-started/canonical-contracts", content: "A list of canonical contract addresses." },
+    { title: "Canonical Contracts", url: "https://docs.pharos.xyz/getting-started/canonical-contracts", content: "Foundry deterministic deployment addresses for canonical contracts." },
   ], "How do I deploy a contract with Foundry?", "search");
 
   assert.equal(results.mode, "search");
