@@ -102,7 +102,7 @@ export default async function handler(req, res) {
       const result = parseAnswer(reply);
       return res.status(200).json({
         found: result.found,
-        answer: result.found ? plainText(result.answer) : "No good answer was found in the Pharos documentation.",
+        answer: result.found ? result.answer : "No good answer was found in the Pharos documentation.",
         reply: result.found ? undefined : plainText(result.raw),
         sources: result.sources,
       });

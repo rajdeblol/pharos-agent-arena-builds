@@ -1,6 +1,7 @@
 import { REQUEST_TIMEOUT_MS } from "./mcp.js";
 
 export const DOCS_ORIGIN = "https://docs.pharos.xyz";
+export const ANSWER_TIMEOUT_MS = 30_000;
 const MAX_SOURCES = 5;
 const NO_ANSWER = /\b(?:cannot|can't|could not|couldn't|unable to) find\b|\bno (?:relevant )?information\b|\bnot (?:covered|documented)\b/i;
 
@@ -75,7 +76,7 @@ export function excerpt(text, maxLength = 220) {
 }
 
 export async function askQuestion(client, question) {
-  return callTool(client, "askQuestion", { question });
+  return callTool(client, "askQuestion", { question }, ANSWER_TIMEOUT_MS);
 }
 
 export async function searchDocumentation(client, query) {
@@ -86,8 +87,8 @@ export async function getPage(client, url) {
   return callTool(client, "getPage", { url });
 }
 
-async function callTool(client, name, args) {
-  const result = await client.callTool({ name, arguments: args }, undefined, { timeout: REQUEST_TIMEOUT_MS });
+async function callTool(client, name, args, timeout = REQUEST_TIMEOUT_MS) {
+  const result = await client.callTool({ name, arguments: args }, undefined, { timeout });
   const text = (result.content ?? []).filter((item) => item.type === "text").map((item) => item.text).join("\n").trim();
   if (result.isError) throw new Error(text || `${name} failed in Developer Docs MCP.`);
   if (!text) throw new Error(`${name} returned an empty response.`);

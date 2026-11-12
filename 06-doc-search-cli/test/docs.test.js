@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { docsPageUrl, excerpt, parseAnswer, parseSearchResults } from "../lib/docs.js";
+import { ANSWER_TIMEOUT_MS, askQuestion, docsPageUrl, excerpt, parseAnswer, parseSearchResults } from "../lib/docs.js";
 import { parseArgs } from "../cli.js";
 
 test("parses an answer and prioritizes linked Pharos documentation sources", () => {
@@ -16,6 +16,20 @@ test("does not treat unsupported, unreferenced text as an answer", () => {
   assert.equal(parseAnswer("I cannot find information about moon cheese.").found, false);
   assert.equal(parseAnswer("A confident but uncited claim.").found, false);
   assert.equal(parseAnswer("").found, false);
+});
+
+test("allows the sourced answer tool enough time to return structured guidance", async () => {
+  let requestOptions;
+  const client = {
+    async callTool(_request, _schema, options) {
+      requestOptions = options;
+      return { content: [{ type: "text", text: "Answer with sources." }] };
+    },
+  };
+
+  await askQuestion(client, "How do I deploy a contract?");
+  assert.equal(requestOptions.timeout, ANSWER_TIMEOUT_MS);
+  assert.equal(ANSWER_TIMEOUT_MS, 30_000);
 });
 
 test("rejects citations and page URLs outside the official docs host", () => {
