@@ -170,13 +170,22 @@ async function sendMessage(token, chatId, text, html = false) {
 function helpText() {
   return [
     "Pharos On-Chain Alert Bot",
-    "/watch <token-address> <minimum> [wallet-address] — start monitoring",
-    "/sample — quick setup: watch Pharos USDC transfers of 1 USDC or more",
-    "/pause — pause monitoring",
-    "/status — show current settings",
-    "/help — show commands",
-    `Sample token: ${SAMPLE_TOKEN_ADDRESS}`,
-    "Scans run once per minute. Only transfers after the baseline can alert.",
+    "QUICK START",
+    "/sample — watch Pharos USDC transfers of at least 1 USDC",
+    `Sample token address: ${SAMPLE_TOKEN_ADDRESS}`,
+    `Custom watch: /watch ${SAMPLE_TOKEN_ADDRESS} 1 [wallet-address]`,
+    "Replace the token address and minimum with your own values.",
+    "The minimum uses normal token units: 1 means 1 USDC.",
+    "Optional wallet filter: alert only if that wallet sends or receives the token.",
+    "COMMANDS",
+    "/watch <token-address> <minimum> [wallet-address] — start a custom watch",
+    "/status — show the active token, minimum, and last scanned block",
+    "/pause — stop the current watch",
+    "/help — show these instructions",
+    "TIMING",
+    "Command replies are immediate. Pharos is scanned once per minute, so transfer alerts may take up to a minute.",
+    "The first scan sets a baseline. Only later matching transfers alert; past transfers are not replayed.",
+    "Read-only bot: no wallet connection or private key is needed.",
   ].join("\n");
 }
 
