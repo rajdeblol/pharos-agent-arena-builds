@@ -179,12 +179,34 @@ function startText() {
     "Optional wallet filter: alert only if that wallet sends or receives the token.",
     "COMMANDS",
     "/watch <token-address> <minimum> [wallet-address] — start a custom watch",
+    "/help — explain bot features and commands",
     "/status — show the active token, minimum, and last scanned block",
     "/pause — stop the current watch",
     "TIMING",
     "Command replies are immediate. Pharos is scanned once per minute, so transfer alerts may take up to a minute.",
     "The first scan sets a baseline. Only later matching transfers alert; past transfers are not replayed.",
     "Read-only bot: no wallet connection or private key is needed.",
+  ].join("\n");
+}
+
+function helpText() {
+  return [
+    "Pharos On-Chain Alert Bot — Help",
+    "The bot reads Pharos ERC-20 Transfer events and sends a Telegram alert when the transfer meets your minimum amount.",
+    "",
+    "COMMANDS",
+    "/sample — watch Pharos USDC transfers of at least 1 USDC, without a wallet filter.",
+    "/watch <token-address> <minimum-token-amount> [wallet-address] — watch a token, optionally limited to transfers sent or received by one wallet.",
+    `/watch ${SAMPLE_TOKEN_ADDRESS} 1 — example: alert on transfers of at least 1 USDC.`,
+    "/status — show the current token, minimum, wallet filter, and last scanned block.",
+    "/pause — stop monitoring.",
+    "/start — show the quick-start instructions.",
+    "",
+    "HOW ALERTS WORK",
+    "Minimums are token amounts, not time values. For example, 1 means 1 USDC.",
+    "The chain is scanned once per minute, so an alert can take up to a minute.",
+    "A new watch starts with a baseline; only matching transfers after that point alert. Past transfers are not replayed.",
+    "Alerts include the amount, sender, recipient, block, and PharosScan transaction link. The bot is read-only and never signs or sends transactions.",
   ].join("\n");
 }
 
@@ -204,6 +226,8 @@ async function processUpdate(env, credentials, update) {
         await sendMessage(credentials.botToken, actualChatId, `The bot is online, but this chat is not configured yet. Set TELEGRAM_CHAT_ID to ${actualChatId} in the Cloudflare Worker secrets, then send /start again.`);
       } else if (actualChatId === credentials.chatId && command === "/start") {
         await sendMessage(credentials.botToken, credentials.chatId, startText());
+      } else if (actualChatId === credentials.chatId && command === "/help") {
+        await sendMessage(credentials.botToken, credentials.chatId, helpText());
       } else if (actualChatId === credentials.chatId && command === "/sample") {
         await env.DB.prepare("UPDATE bot_state SET token = ?, minimum = ?, wallet = NULL, last_block = NULL, symbol = NULL, decimals = NULL WHERE id = 1")
           .bind(SAMPLE_TOKEN_ADDRESS, "1").run();
@@ -383,6 +407,6 @@ export default {
         else telegramStatus = "telegram_request_failed";
       }
     }
-    return Response.json({ service: "Pharos On-Chain Alert Bot", bot, telegramStatus, commands: ["/watch", "/sample", "/pause", "/status"], scanInterval: "1 minute" });
+    return Response.json({ service: "Pharos On-Chain Alert Bot", bot, telegramStatus, commands: ["/watch", "/sample", "/pause", "/status", "/start", "/help"], scanInterval: "1 minute" });
   },
 };

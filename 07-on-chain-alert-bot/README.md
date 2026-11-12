@@ -28,6 +28,7 @@ The address is Circle's [USDC contract on Pharos mainnet](https://www.circle.com
 
 ```text
 /start                           Show instructions
+/help                            Explain features and commands
 /sample                          Watch Pharos USDC at a 1 USDC minimum
 /watch <token> <minimum> [wallet]
 /status                          Show the current watch
