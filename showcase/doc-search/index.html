@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f8fb">
+  <meta name="description" content="Ask Pharos developer documentation from your browser and get concise answers with source links.">
+  <title>Pharos Docs Search</title>
+  <style>
+    :root{color-scheme:light;--paper:#f7f8fb;--card:#fff;--ink:#161923;--muted:#697184;--line:#e1e5ee;--blue:#2536c9;--pale:#edf0ff;--green:#28734f;--red:#a43d43;font:16px/1.6 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink)}a{color:var(--blue)}.top{max-width:1100px;margin:auto;padding:22px 28px;display:flex;align-items:center;justify-content:space-between}.brand{font:700 12px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em}.brand b{display:inline-grid;place-items:center;width:30px;height:30px;margin-right:9px;border-radius:9px;background:var(--blue);color:#fff;font:700 15px sans-serif}.top a{font:11px ui-monospace,SFMono-Regular,Menlo,monospace;text-decoration:none}.wrap{max-width:900px;margin:34px auto 70px;padding:0 24px}.eyebrow{font:11px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;color:var(--blue)}h1{margin:12px 0 8px;font-size:clamp(42px,7vw,66px);line-height:1.02;letter-spacing:-.065em}.lede{max-width:670px;margin:0;color:var(--muted);font-size:17px}.live{display:inline-flex;align-items:center;gap:7px;margin:24px 0 12px;padding:6px 10px;border:1px solid #cfdbd3;border-radius:999px;background:#f1f8f3;color:var(--green);font:10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em}.live i{width:7px;height:7px;border-radius:50%;background:#459969}.panel{padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:0 9px 32px #17245a0b}.label{display:block;margin-bottom:8px;font:11px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;color:var(--muted)}textarea{display:block;width:100%;min-height:112px;resize:vertical;padding:14px 15px;border:1px solid #cdd3df;border-radius:11px;background:#fff;color:var(--ink);font:inherit;line-height:1.5;outline:none}textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #2536c91c}.controls{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px}.count{font:10px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted)}button{font:inherit}.submit{border:0;border-radius:10px;padding:11px 16px;background:var(--blue);color:#fff;font:12px ui-monospace,SFMono-Regular,Menlo,monospace;cursor:pointer}.submit:disabled{opacity:.55;cursor:wait}.suggestions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.suggestions button{border:1px solid var(--line);border-radius:999px;padding:7px 11px;background:var(--card);color:var(--muted);font-size:12px;cursor:pointer}.suggestions button:hover{border-color:var(--blue);color:var(--blue)}.hint{margin:14px 0 0;color:var(--muted);font-size:11px}.result{display:none;margin-top:18px;padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--card)}.result.visible{display:block}.result-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--line)}.result-head h2{margin:0;font-size:17px;letter-spacing:-.02em}.result-head span{font:10px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted)}.answer{white-space:pre-line;margin:16px 0;color:var(--ink)}.reply{padding:12px 14px;border-left:3px solid #d6dbea;background:var(--paper);color:var(--muted);font-size:13px}.sources{margin:18px 0 0;padding:0;list-style:none}.sources li{padding:10px 0;border-top:1px solid var(--line)}.sources a{font-weight:600;text-decoration:none}.sources a:hover{text-decoration:underline}.source-url{display:block;overflow-wrap:anywhere;color:var(--muted);font:11px ui-monospace,SFMono-Regular,Menlo,monospace;text-decoration:none}.error{color:var(--red)}.foot{display:flex;justify-content:space-between;gap:12px;margin-top:22px;color:var(--muted);font:10px ui-monospace,SFMono-Regular,Menlo,monospace}.foot a{text-decoration:none}@media(max-width:600px){.top{padding:16px 20px}.wrap{margin-top:24px;padding:0 18px}.panel,.result{padding:16px}.controls{align-items:flex-start;flex-direction:column}.submit{width:100%}.foot{flex-direction:column}}
+  </style>
+</head>
+<body>
+  <header class="top"><div class="brand"><b>P</b>PHAROS / DOCS MCP</div><a href="/">ALL BUILDS ↗</a></header>
+  <main class="wrap">
+    <div class="eyebrow">DEVELOPER DOCS · LIVE SEARCH</div>
+    <h1>Ask the docs.</h1>
+    <p class="lede">Get a concise answer from Pharos developer documentation with links to the pages behind it. If the docs don’t cover your question, this demo says so.</p>
+    <div class="live"><i></i> CONNECTED TO DEVELOPER DOCS MCP</div>
+    <section class="panel" aria-label="Ask a question">
+      <form id="ask-form">
+        <label class="label" for="question">YOUR QUESTION</label>
+        <textarea id="question" name="question" maxlength="500" placeholder="How do I deploy a contract with Foundry?" required></textarea>
+        <div class="controls"><span class="count"><span id="char-count">0</span> / 500</span><button class="submit" id="submit" type="submit">ASK PHAROS DOCS ↗</button></div>
+      </form>
+      <div class="suggestions" aria-label="Example questions">
+        <button type="button" data-question="How do I deploy a contract with Foundry?">Foundry deployment</button>
+        <button type="button" data-question="What is the Pacific Mainnet chain ID and RPC URL?">Mainnet details</button>
+        <button type="button" data-question="How do I connect a wallet to Pharos?">Wallet setup</button>
+      </div>
+      <p class="hint">Answers and citations come from live MCP responses. No API key is required.</p>
+    </section>
+    <section class="result" id="result" aria-live="polite" aria-busy="false"></section>
+    <div class="foot"><span>READ-ONLY · SOURCED ANSWERS</span><a href="https://docs.pharos.xyz/" target="_blank" rel="noreferrer">BROWSE DOCS ↗</a></div>
+  </main>
+  <script>
+    const form = document.getElementById('ask-form');
+    const question = document.getElementById('question');
+    const submit = document.getElementById('submit');
+    const result = document.getElementById('result');
+    const charCount = document.getElementById('char-count');
+
+    function element(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function showResult(data) {
+      result.replaceChildren();
+      result.classList.add('visible');
+      result.setAttribute('aria-busy', 'false');
+      const heading = element('h2', '', data.found ? 'Answer' : data.error ? 'Could not reach the docs' : 'No good answer found');
+      const head = element('div', 'result-head');
+      head.append(heading, element('span', '', data.found ? 'SOURCED FROM PHAROS DOCS' : 'NO UNSOURCED ANSWER SHOWN'));
+      result.append(head);
+      if (data.answer || data.error) result.append(element('p', data.error ? 'answer error' : 'answer', data.error || data.answer));
+      if (data.reply) result.append(element('div', 'reply', `Docs MCP reply: ${data.reply}`));
+      if (data.sources?.length) {
+        const list = element('ol', 'sources');
+        for (const source of data.sources) {
+          const url = new URL(source.url);
+          if (url.protocol !== 'https:' || url.hostname !== 'docs.pharos.xyz') continue;
+          const item = element('li');
+          const link = element('a', '', source.title);
+          link.href = url.href;
+          link.target = '_blank';
+          link.rel = 'noreferrer';
+          item.append(link, element('a', 'source-url', source.url));
+          item.lastChild.href = url.href;
+          item.lastChild.target = '_blank';
+          item.lastChild.rel = 'noreferrer';
+          list.append(item);
+        }
+        if (list.children.length) result.append(list);
+      }
+    }
+
+    question.addEventListener('input', () => { charCount.textContent = question.value.length; });
+    document.querySelectorAll('[data-question]').forEach((button) => button.addEventListener('click', () => {
+      question.value = button.dataset.question;
+      charCount.textContent = question.value.length;
+      form.requestSubmit();
+    }));
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const value = question.value.trim();
+      if (value.length < 4) return;
+      submit.disabled = true;
+      submit.textContent = 'SEARCHING DOCS…';
+      result.replaceChildren(element('p', 'answer', 'Searching Pharos documentation…'));
+      result.classList.add('visible');
+      result.setAttribute('aria-busy', 'true');
+      try {
+        const response = await fetch('/api/docs-search', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ question: value }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'The request failed. Try again.');
+        showResult(data);
+      } catch (error) {
+        showResult({ error: error.message || 'The request failed. Try again.' });
+      } finally {
+        submit.disabled = false;
+        submit.textContent = 'ASK PHAROS DOCS ↗';
+      }
+    });
+  </script>
+</body>
+</html>

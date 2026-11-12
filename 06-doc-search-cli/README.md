@@ -2,6 +2,8 @@
 
 `pharos-docs` searches Pharos developer documentation from a terminal. It uses the official Developer Docs MCP at `https://docs.pharos.xyz/~gitbook/mcp`, returns concise answers with sources, and says when a supported answer was not found.
 
+**Browser demo:** [Ask Pharos Docs](https://pharos-agent-arena-builds.vercel.app/doc-search)
+
 ## Requirements
 
 - Node.js 20 or newer

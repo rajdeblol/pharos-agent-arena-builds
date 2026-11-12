@@ -3,5 +3,6 @@
   "framework": null,
   "buildCommand": null,
   "outputDirectory": "showcase",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "functions": { "api/docs-search.mjs": { "maxDuration": 60 } }
 }

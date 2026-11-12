@@ -2,7 +2,7 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 
 export const DOCS_MCP_URL = process.env.PHAROS_DOCS_MCP_URL ?? "https://docs.pharos.xyz/~gitbook/mcp";
-const REQUEST_TIMEOUT_MS = 30_000;
+const REQUEST_TIMEOUT_MS = 15_000;
 const RETRIES = 2;
 
 function isRetryable(error) {
@@ -23,12 +23,12 @@ export async function connectDocsMcp(url = DOCS_MCP_URL) {
   return client;
 }
 
-export async function callWithRetry(operation, label) {
+export async function callWithRetry(operation, label, maxRetries = RETRIES) {
   for (let attempt = 0; ; attempt += 1) {
     try {
       return await operation();
     } catch (error) {
-      if (!isRetryable(error) || attempt >= RETRIES) {
+      if (!isRetryable(error) || attempt >= maxRetries) {
         throw new Error(`${label}: ${error.message}`, { cause: error });
       }
       await delay(400 * (2 ** attempt));

@@ -15,7 +15,7 @@ The home page and demos open in white mode. Use the top-right control to switch 
 | 03 | Event Log Monitor | Chain MCP | Easy | 50 | [03-event-log-monitor](./03-event-log-monitor/) | [Open demo](https://pharos-event-log-monitor.vercel.app/) |
 | 04 | Docs MCP Onboarding | Developer Docs MCP | Easy | 50 | [04-docs-mcp-onboarding](./04-docs-mcp-onboarding/) | [Open demo](https://pharos-docs-mcp-onboarding.vercel.app/) |
 | 05 | Arbitrage Scanner | Chain MCP | Hard | 200 | [05-arbitrage-scanner](./05-arbitrage-scanner/) | [Open demo](https://pharos-arb-scanner-raj.vercel.app/) |
-| 06 | Doc-Search CLI | Developer Docs MCP | Easy | 50 | [06-doc-search-cli](./06-doc-search-cli/) | [CLI instructions](./06-doc-search-cli/README.md) |
+| 06 | Doc-Search CLI | Developer Docs MCP | Easy | 50 | [06-doc-search-cli](./06-doc-search-cli/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/doc-search) |
 
 ## Quick start
 
