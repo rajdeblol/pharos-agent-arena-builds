@@ -44,7 +44,7 @@ export function makeSearchFallback(results, question, resultMode = "search-fallb
   }).sort((a, b) => b.score - a.score || a.index - b.index);
   const bestScore = relevant[0]?.score ?? 0;
   const distinct = relevant.filter((result) => {
-    if (result.score < bestScore * 0.75) return false;
+    if (result.score < bestScore * 0.9) return false;
     if (uniqueTitles.has(result.normalizedTitle)) return false;
     uniqueTitles.add(result.normalizedTitle);
     return true;
