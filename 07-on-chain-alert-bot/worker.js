@@ -1,5 +1,74 @@
-import { decimalToUnits, matchesWatch, parseWatchCommand } from "./src/bot-logic.mjs";
-import { buildTelegramMessage, validateTelegramCredentials } from "./src/telegram.mjs";
+const WATCH_ADDRESS = /^0x[a-fA-F0-9]{40}$/;
+const DECIMAL = /^\d{1,30}(?:\.\d{1,36})?$/;
+
+function parseWatchCommand(text) {
+  const [command, token, minimum, wallet, extra] = String(text || "").trim().split(/\s+/);
+  if (command?.split("@")[0].toLowerCase() !== "/watch" || !WATCH_ADDRESS.test(token || "") || !DECIMAL.test(minimum || "") || extra !== undefined) return null;
+  if (wallet && !WATCH_ADDRESS.test(wallet)) return null;
+  if (!/[1-9]/.test(minimum)) return null;
+  return { token, minimum, wallet: wallet?.toLowerCase() || "" };
+}
+
+function decimalToUnits(value, decimals) {
+  const text = String(value || "");
+  if (!DECIMAL.test(text) || !Number.isInteger(decimals) || decimals < 0 || decimals > 36) throw new Error("Invalid token amount.");
+  const [whole, fraction = ""] = text.split(".");
+  if (fraction.length > decimals) throw new Error(`Use no more than ${decimals} decimal places for this token.`);
+  return BigInt(whole) * 10n ** BigInt(decimals) + BigInt((fraction + "0".repeat(decimals)).slice(0, decimals) || "0");
+}
+
+function matchesWatch(event, watch, decimals) {
+  if (watch.wallet && event.from.toLowerCase() !== watch.wallet && event.to.toLowerCase() !== watch.wallet) return false;
+  return decimalToUnits(event.amount, decimals) >= decimalToUnits(watch.minimum, decimals);
+}
+
+const BOT_TOKEN = /^\d{6,12}:[A-Za-z0-9_-]{30,}$/;
+const CHAT_ID = /^(?:-?\d{1,20}|@[A-Za-z][A-Za-z0-9_]{4,31})$/;
+const TG_ADDRESS = /^0x[a-fA-F0-9]{40}$/;
+const HASH = /^0x[a-fA-F0-9]{64}$/;
+const AMOUNT = /^\d{1,30}(?:\.\d{1,36})?$/;
+const EXPLORER = "https://www.pharosscan.xyz";
+
+function validateTelegramCredentials(token, chatId) {
+  const botToken = String(token || "").trim();
+  const destination = String(chatId || "").trim();
+  if (!BOT_TOKEN.test(botToken)) throw new Error("Enter a valid Telegram bot token from @BotFather.");
+  if (!CHAT_ID.test(destination)) throw new Error("Enter a valid Telegram chat ID or public channel username.");
+  return { botToken, chatId: destination };
+}
+
+function buildTelegramMessage(event, threshold) {
+  if (!event || typeof event !== "object") throw new Error("Alert event is missing.");
+  const tx = String(event.tx || "");
+  const from = String(event.from || "");
+  const to = String(event.to || "");
+  const token = String(event.token || "");
+  const amount = String(event.amount || "");
+  const minimum = String(threshold || "");
+  const block = Number(event.block);
+  const logIndex = Number(event.logIndex);
+  const kind = ["TRANSFER", "MINT", "BURN"].includes(event.kind) ? event.kind : "TRANSFER";
+
+  if (!HASH.test(tx) || !TG_ADDRESS.test(from) || !TG_ADDRESS.test(to) || !TG_ADDRESS.test(token)) throw new Error("Event addresses or transaction hash are invalid.");
+  if (!AMOUNT.test(amount) || !AMOUNT.test(minimum)) throw new Error("Transfer amount or alert threshold is invalid.");
+  if (!Number.isSafeInteger(block) || block < 0 || !Number.isSafeInteger(logIndex) || logIndex < 0) throw new Error("Event block data is invalid.");
+
+  const symbol = safeSymbol(event.symbol);
+  const id = `1672:${tx.toLowerCase()}:${logIndex}`;
+  const explorer = `${EXPLORER}/tx/${tx}`;
+  return [
+    `🔔 <b>Pharos ${kind.toLowerCase()} alert</b>`,
+    `Transfer: <b>${amount} ${symbol}</b>`,
+    `Minimum: ${minimum} ${symbol}`,
+    `From: <code>${from}</code>`,
+    `To: <code>${to}</code>`,
+    `Token: <code>${token}</code>`,
+    `Block: ${block}`,
+    `<a href="${explorer}">View transaction on PharosScan</a>`,
+    `Event ID: <code>${id}</code>`,
+  ].join("\n");
+}
+
 
 const RPC_URL = "https://rpc.pharos.xyz";
 const TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
