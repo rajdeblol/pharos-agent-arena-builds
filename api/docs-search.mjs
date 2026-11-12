@@ -22,36 +22,47 @@ function searchTerms(question) {
     .filter((term) => term.length > 2 && !ignoredTerms.has(term));
 }
 
-export function makeSearchFallback(results, question) {
+export function makeSearchFallback(results, question, resultMode = "search-fallback") {
   const terms = searchTerms(question);
+  const uniqueTitles = new Set();
   const relevant = results.flatMap((result, index) => {
     try {
       const url = new URL(result.url);
       if (!result.content || url.protocol !== "https:" || url.hostname !== "docs.pharos.xyz") return [];
       const title = plainText(result.title).toLowerCase();
       const content = plainText(result.content).toLowerCase();
-      const score = terms.reduce((total, term) => total + (title.includes(term) ? 4 : 0) + (content.includes(term) ? 1 : 0), 0);
-      return score ? [{ ...result, score, index }] : [];
+      const path = url.pathname.toLowerCase();
+      const score = terms.reduce((total, term) => total + (title.includes(term) ? 8 : 0) + (path.includes(term) ? 6 : 0) + (content.includes(term) ? 1 : 0), 0);
+      const minScore = terms.length > 1 ? 2 : 1;
+      return score >= minScore ? [{ ...result, score, index, normalizedTitle: title }] : [];
     } catch {
       return [];
     }
-  }).sort((a, b) => b.score - a.score || a.index - b.index).slice(0, 3);
-  if (!relevant.length) return null;
+  }).sort((a, b) => b.score - a.score || a.index - b.index);
+  const bestScore = relevant[0]?.score ?? 0;
+  const distinct = relevant.filter((result) => {
+    if (result.score < bestScore * 0.75) return false;
+    if (uniqueTitles.has(result.normalizedTitle)) return false;
+    uniqueTitles.add(result.normalizedTitle);
+    return true;
+  }).slice(0, 3);
+  if (!distinct.length) return null;
 
-  const answer = [
-    "A direct answer is temporarily unavailable. These matching extracts are from the Pharos docs:",
-    ...relevant.map((result) => {
-      const content = plainText(result.content);
-      const excerpt = content.length > 420 ? `${content.slice(0, 419).trimEnd()}…` : content;
-      return `\n${result.title}: ${excerpt}`;
-    }),
-  ].join("\n");
+  const sources = distinct.map((result) => {
+    const content = plainText(result.content)
+      .replace(/```[\s\S]*?```/g, " ")
+      .replace(/^\s*[-*#>]+\s?/gm, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    const excerpt = content.length > 280 ? `${content.slice(0, 279).trimEnd()}…` : content;
+    return { title: result.title, url: result.url, excerpt };
+  });
 
   return {
     found: true,
-    answer: plainText(answer),
-    sources: relevant.map(({ title, url }) => ({ title, url })),
-    mode: "search-fallback",
+    answer: "These are the closest matching pages in the Pharos documentation.",
+    sources,
+    mode: resultMode,
   };
 }
 
@@ -62,6 +73,10 @@ export default async function handler(req, res) {
   }
 
   const question = req.body && typeof req.body.question === "string" ? req.body.question.trim() : "";
+  const mode = req.body?.mode ?? "answer";
+  if (!new Set(["answer", "search"]).has(mode)) {
+    return res.status(400).json({ error: "Choose answer or search mode." });
+  }
   if (question.length < 4 || question.length > 500) {
     return res.status(400).json({ error: "Enter a question between 4 and 500 characters." });
   }
@@ -69,6 +84,16 @@ export default async function handler(req, res) {
   let client;
   try {
     client = await callWithRetry(() => connectDocsMcp(), "Connect to Docs MCP", 1);
+    if (mode === "search") {
+      const results = await callWithRetry(() => searchDocumentation(client, question), "Docs MCP search", 0);
+      const searchResult = makeSearchFallback(results, question, "search");
+      return res.status(200).json(searchResult ?? {
+        found: false,
+        answer: "No matching Pharos documentation pages were found.",
+        sources: [],
+        mode: "search",
+      });
+    }
     try {
       const reply = await callWithRetry(() => askQuestion(client, question), "Docs MCP question", 0);
       const result = parseAnswer(reply);
