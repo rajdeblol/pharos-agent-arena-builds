@@ -1,6 +1,6 @@
 # Pharos On-Chain Alert Bot
 
-A persistent Telegram bot that watches Pharos ERC-20 `Transfer` logs. Configure a minimum amount and optional wallet in Telegram; matching new events arrive as messages with transfer details and a PharosScan link. It is read-only and does not need a wallet or private key.
+A Telegram command bot for monitoring new Pharos ERC-20 transfers. Cloudflare Cron runs it once a minute; D1 persists settings, scan cursor, Telegram update offset, and event IDs. The bot is read-only and never requests a wallet or private key.
 
 ## Telegram commands
 
@@ -12,24 +12,30 @@ A persistent Telegram bot that watches Pharos ERC-20 `Transfer` logs. Configure 
 /help
 ```
 
-In `/watch`, replace the placeholders with a real Pharos ERC-20 address, a minimum amount, and optionally a wallet to filter. The bot scans Pharos Mainnet every eight seconds. The first scan records a baseline and does not alert on historical transfers. Event IDs and Telegram update offsets are persisted to avoid duplicate alerts and repeated commands after restarts.
+Only the private chat configured as `TELEGRAM_CHAT_ID` can control this bot. A `/watch` starts from the next current block, so past transfers do not alert. Alerts include value, sender, recipient, block, event ID, and a PharosScan link. Scanning is scheduled every minute.
 
-## Run locally
+## Free Cloudflare setup
 
-Requires Node.js 20 or newer. Set `TELEGRAM_BOT_TOKEN` and your numeric private `TELEGRAM_CHAT_ID` in `.env.local`, then run from the repository root:
+Requires Node.js 20+. From the repository root:
 
 ```sh
 npm install
-npm run onchain-alert
+cd 07-on-chain-alert-bot
+npm run db:create
 ```
 
-Create the bot with [@BotFather](https://t.me/BotFather), send it `/start`, and get your numeric chat ID from [@userinfobot](https://t.me/userinfobot). Only that configured chat can control the worker. The bot prints its direct `t.me` link when it starts.
+Copy the returned D1 database ID into `database_id` in `wrangler.jsonc`, then run:
 
-## Always-on hosting
+```sh
+npm run db:migrate:remote
+npx wrangler secret put TELEGRAM_BOT_TOKEN
+npx wrangler secret put TELEGRAM_CHAT_ID
+npm run deploy
+```
 
-This is a long-running worker, so Vercel serverless functions are not used for this task. `render.yaml` defines a Render Background Worker and persistent disk. Deploy the repository from Render, set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` as private environment values, then open the bot link from its startup logs. The worker state path is configured to the mounted disk.
+Use a newly rotated token from [@BotFather](https://t.me/BotFather). Do not commit `.dev.vars` or paste the token into the website. Local development uses `.dev.vars` (copy `.dev.vars.example`) and `npm run db:migrate:local` before `npm run dev`.
 
-For local runs, state is written to the ignored `.state.json` file. Keep `.env.local` and `.state.json` out of Git. If a bot token has been shared in chat, revoke it with @BotFather and use the replacement.
+Cloudflare Workers Cron and D1 have free allowances suitable for this low-volume, one-minute watcher. Free-tier limits still apply; see [Workers limits](https://developers.cloudflare.com/workers/platform/limits/) and [D1 pricing](https://developers.cloudflare.com/d1/platform/pricing/).
 
 ## Tests
 

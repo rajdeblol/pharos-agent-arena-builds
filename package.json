@@ -9,7 +9,8 @@
     "gatekeeper": "npm run start --workspace=policy-gatekeeper",
     "showcase": "python3 -m http.server 4175 --directory showcase",
     "event-monitor": "npm run start --workspace=pharos-event-log-monitor",
-    "onchain-alert": "npm run telegram-bot --workspace=pharos-on-chain-alert-bot"
+    "onchain-alert": "npm run dev --workspace=pharos-on-chain-alert-bot",
+    "onchain-alert:deploy": "npm run deploy --workspace=pharos-on-chain-alert-bot"
   },
   "engines": { "node": ">=20" }
 }

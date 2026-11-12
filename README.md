@@ -37,7 +37,7 @@ Run the event monitor with `npm run event-monitor`; it listens on http://localho
 
 Run the docs search CLI with `cd 06-doc-search-cli && npm ci && npm link`, then use `pharos-docs "your question"`.
 
-Run the Telegram on-chain alert worker with `npm run onchain-alert`. Set `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in `07-on-chain-alert-bot/.env.local` locally or as private environment values on the always-on worker host described in its README.
+Deploy the free scheduled Telegram alert bot with `cd 07-on-chain-alert-bot`, then follow its README to create D1, set private Worker secrets, and deploy with Wrangler.
 
 Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-mcp-onboarding/public`.
 

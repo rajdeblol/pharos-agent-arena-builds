@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "A persistent Telegram command bot for Pharos ERC-20 transfer alerts.",
+  "description": "A scheduled Telegram bot for Pharos ERC-20 transfer alerts.",
   "scripts": {
-    "start": "node worker.mjs",
-    "telegram-bot": "node worker.mjs",
+    "dev": "npx --yes wrangler@4.50.0 dev --test-scheduled --config wrangler.jsonc",
+    "deploy": "npx --yes wrangler@4.50.0 deploy --config wrangler.jsonc",
+    "db:create": "npx --yes wrangler@4.50.0 d1 create pharos-alert-state --config wrangler.jsonc",
+    "db:migrate:local": "npx --yes wrangler@4.50.0 d1 migrations apply pharos-alert-state --local --config wrangler.jsonc",
+    "db:migrate:remote": "npx --yes wrangler@4.50.0 d1 migrations apply pharos-alert-state --remote --config wrangler.jsonc",
     "test": "node --test"
   },
   "engines": { "node": ">=20" }
