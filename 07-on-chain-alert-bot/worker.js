@@ -81,12 +81,11 @@ async function postJson(url, body) {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(body),
-    redirect: "error",
     signal: AbortSignal.timeout(15_000),
   });
-  if (!response.ok) throw new Error("Remote service request failed.");
+  if (!response.ok) throw new Error("Remote service request failed: " + response.status);
   const data = await response.json();
-  if (data.error) throw new Error("Remote service returned an error.");
+  if (data.error || data.ok === false) throw new Error("Remote service returned an error: " + (data.error_code || "unknown"));
   return data;
 }
 
@@ -301,11 +300,28 @@ export default {
 
   async fetch(_request, env) {
     let bot = "Telegram bot";
+    let telegramStatus = "not_configured";
     try {
       const credentials = validateTelegramCredentials(env.TELEGRAM_BOT_TOKEN, env.TELEGRAM_CHAT_ID);
+      telegramStatus = "checking";
       const me = await telegram(credentials.botToken, "getMe");
       if (me.username) bot = `@${me.username}`;
-    } catch { /* Health response does not reveal configuration or secret errors. */ }
-    return Response.json({ service: "Pharos On-Chain Alert Bot", bot, commands: ["/watch", "/pause", "/status", "/help"], scanInterval: "1 minute" });
+      telegramStatus = me.username ? "connected" : "telegram_response_incomplete";
+    } catch (error) {
+      const message = String(error?.message || "");
+      if (message.includes("valid Telegram bot token")) telegramStatus = "invalid_token_format";
+      else if (message.includes("valid Telegram chat ID")) telegramStatus = "invalid_chat_id_format";
+      else if (message.includes("401")) telegramStatus = "telegram_rejected_token";
+      else if (message.includes("404")) telegramStatus = "telegram_endpoint_error";
+      else if (message.includes("429")) telegramStatus = "telegram_rate_limited";
+      else {
+        const statusCode = message.match(/(?:failed: |error: )(\d{3})/)?.[1];
+        if (statusCode) telegramStatus = "telegram_http_" + statusCode;
+        else if (error?.name === "TimeoutError" || error?.name === "AbortError") telegramStatus = "telegram_timeout";
+        else if (error?.name === "TypeError") telegramStatus = "telegram_network_error";
+        else telegramStatus = "telegram_request_failed";
+      }
+    }
+    return Response.json({ service: "Pharos On-Chain Alert Bot", bot, telegramStatus, commands: ["/watch", "/pause", "/status", "/help"], scanInterval: "1 minute" });
   },
 };
