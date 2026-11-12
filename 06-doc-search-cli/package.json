@@ -1,0 +1,17 @@
+{
+  "name": "pharos-doc-search-cli",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "description": "Search Pharos developer documentation from the terminal using Developer Docs MCP.",
+  "bin": { "pharos-docs": "cli.js" },
+  "scripts": {
+    "start": "node cli.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1"
+  }
+}

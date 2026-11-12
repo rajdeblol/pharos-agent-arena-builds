@@ -15,6 +15,7 @@ The home page and demos open in white mode. Use the top-right control to switch 
 | 03 | Event Log Monitor | Chain MCP | Easy | 50 | [03-event-log-monitor](./03-event-log-monitor/) | [Open demo](https://pharos-event-log-monitor.vercel.app/) |
 | 04 | Docs MCP Onboarding | Developer Docs MCP | Easy | 50 | [04-docs-mcp-onboarding](./04-docs-mcp-onboarding/) | [Open demo](https://pharos-docs-mcp-onboarding.vercel.app/) |
 | 05 | Arbitrage Scanner | Chain MCP | Hard | 200 | [05-arbitrage-scanner](./05-arbitrage-scanner/) | [Open demo](https://pharos-arb-scanner-raj.vercel.app/) |
+| 06 | Doc-Search CLI | Developer Docs MCP | Easy | 50 | [06-doc-search-cli](./06-doc-search-cli/) | [CLI instructions](./06-doc-search-cli/README.md) |
 
 ## Quick start
 
@@ -33,6 +34,8 @@ The contract reader listens on http://localhost:4173; the policy demo listens on
 
 Run the event monitor with `npm run event-monitor`; it listens on http://localhost:4176.
 
+Run the docs search CLI with `cd 06-doc-search-cli && npm ci && npm link`, then use `pharos-docs "your question"`.
+
 Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-mcp-onboarding/public`.
 
 ## Layout
@@ -42,6 +45,7 @@ Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-m
     03-event-log-monitor/     live ERC-20 Transfer feed via Chain MCP
     04-docs-mcp-onboarding/   docs-only onboarding log and gaps
     05-arbitrage-scanner/     two-source read-only arbitrage comparison
+    06-doc-search-cli/        sourced Pharos docs answers from a terminal
     showcase/                 static landing page for the demos
 
 ## Notes
