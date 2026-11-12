@@ -14,12 +14,12 @@
 <section class="hero"><div class="eyebrow"><b>05 / SCAN</b>　·　CHAIN MCP　·　PHAROS MAINNET</div><h1>Find the <em>spread.</em></h1><p>Compare two pool quotes at one block, account for costs, and see whether the numbers clear your threshold. Read-only by design.</p></section>
 <section class="section"><div class="head"><span class="num">01</span><h2>Scan settings</h2><span class="pill"><i class="dot"></i> LIVE READ · NO SIGNER</span></div><div class="grid">
 <div class="box"><h3>Pair & assumptions</h3><div class="field-grid">
-<div class="field"><label for="amount">TRADE SIZE (BASE TOKEN)</label><input id="amount" type="number" value="0.1" min="0.000001" step="any"></div>
-<div class="field"><label for="threshold">MIN NET PROFIT (USD)</label><input id="threshold" type="number" value="0.05" min="0" step="0.01"></div>
+<div class="field"><label for="amount">TRADE SIZE (BASE TOKEN)</label><input id="amount" type="number" value="0.1" min="0.000001" step="any" list="amount-presets"><datalist id="amount-presets"><option value="0.1"><option value="0.25"><option value="0.5"><option value="1"><option value="2"></datalist></div>
+<div class="field"><label for="threshold">MIN NET PROFIT (USD)</label><input id="threshold" type="number" value="0.05" min="0" step="0.01" list="threshold-presets"><datalist id="threshold-presets"><option value="0.01"><option value="0.05"><option value="0.1"><option value="0.25"></datalist></div>
 <div class="field"><label for="gas">GAS PRICE (GWEI · LIVE)</label><input id="gas" value="Read from Chain MCP" readonly></div>
-<div class="field"><label for="pros">NATIVE TOKEN USD (ASSUMED)</label><input id="pros" type="number" value="0.10" min="0" step="any"></div>
-<div class="field"><label for="slippage">EXTRA SLIPPAGE BUFFER (BPS)</label><input id="slippage" type="number" value="30" min="0" max="5000" step="1"></div>
-<div class="field"><label for="gasUnits">GAS UNITS (ASSUMED)</label><input id="gasUnits" type="number" value="260000" min="1" step="1000"></div>
+<div class="field"><label for="pros">NATIVE TOKEN USD (ASSUMED)</label><input id="pros" type="number" value="0.10" min="0" step="any" list="native-price-presets"><datalist id="native-price-presets"><option value="0.05"><option value="0.1"><option value="0.25"><option value="0.5"></datalist></div>
+<div class="field"><label for="slippage">EXTRA SLIPPAGE BUFFER (BPS)</label><input id="slippage" type="number" value="30" min="0" max="5000" step="1" list="slippage-presets"><datalist id="slippage-presets"><option value="10"><option value="30"><option value="50"><option value="100"></datalist></div>
+<div class="field"><label for="gasUnits">GAS UNITS (ASSUMED)</label><input id="gasUnits" type="number" value="260000" min="1" step="1000" list="gas-presets"><datalist id="gas-presets"><option value="200000"><option value="260000"><option value="350000"><option value="500000"></datalist></div>
 <div class="field wide"><label for="base">BASE TOKEN</label><input id="base" value="0x52C48d4213107b20bC583832b0d951FB9CA8F0B0" spellcheck="false"></div>
 <div class="field wide"><label for="quote">QUOTE TOKEN</label><input id="quote" value="0xC879C018dB60520F4355C26eD1a6D572cdAC1815" spellcheck="false"></div>
 <div class="field wide"><label for="dodo">DODO V2 POOL</label><input id="dodo" value="0xac998dD78829aDe9f654e0BE7a4D7F60D8B37196" spellcheck="false"></div>
@@ -28,6 +28,7 @@
 <div class="box result" id="result"><div class="empty">A scan result will show here.<br>Only verified live reads can produce a simulated prepare.</div></div></div></section>
 <section class="section"><div class="head"><span class="num">02</span><h2>Scan log</h2><span class="mono" id="count">0 RUNS</span></div><div class="ledger" id="ledger"><div class="row headrow"><span>TIME</span><span>BEST ROUTE</span><span>NET</span><span>DECISION</span></div><div id="emptyLog" class="row" style="color:var(--muted)"><span>—</span><span>No scans yet. Each run is kept in this session.</span><span>—</span><span>—</span></div></div></section>
 <footer class="foot"><span>PHAROS BUILDS / 2026</span><span>Quotes are estimates. This demo never signs or sends a trade.</span><span>UI and README were created with AI assistance.</span><a href="https://github.com/rajdeblol/pharos-agent-arena-builds/tree/main/05-arbitrage-scanner">SOURCE ↗</a></footer>
+<p class="fine">Note: Each scan reads live Pharos pool data at the latest block. If pool prices have not changed, estimates may repeat. This scanner is read-only and does not execute trades.</p>
 </main>
 <script>
 const $=id=>document.getElementById(id), result=$('result'), runs=[];
