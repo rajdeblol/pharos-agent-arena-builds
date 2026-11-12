@@ -1,6 +1,6 @@
 # Pharos On-Chain Alert Bot
 
-A Telegram command bot for monitoring new Pharos ERC-20 transfers. Cloudflare Cron runs it once a minute; D1 persists settings, scan cursor, Telegram update offset, and event IDs. The bot is read-only and never requests a wallet or private key.
+A Telegram bot for monitoring Pharos ERC-20 transfers. Telegram webhooks deliver commands directly to the Worker; Cloudflare Cron registers the webhook and scans the chain once a minute. D1 persists settings, scan cursor, Telegram update offset, and event IDs. The bot is read-only and never requests a wallet or private key.
 
 ## Telegram commands
 
@@ -12,7 +12,7 @@ A Telegram command bot for monitoring new Pharos ERC-20 transfers. Cloudflare Cr
 /help
 ```
 
-Only the private chat configured as `TELEGRAM_CHAT_ID` can control this bot. A `/watch` starts from the next current block, so past transfers do not alert. Alerts include value, sender, recipient, block, event ID, and a PharosScan link. Scanning is scheduled every minute.
+Only the private chat configured as `TELEGRAM_CHAT_ID` can control this bot. A `/watch` starts from the next current block, so past transfers do not alert. Alerts include value, sender, recipient, block, event ID, and a PharosScan link. Telegram command replies are webhook-driven; on-chain transfer alerts can lag by up to one scan interval.
 
 ## Free Cloudflare setup
 

@@ -28,6 +28,7 @@ const TG_ADDRESS = /^0x[a-fA-F0-9]{40}$/;
 const HASH = /^0x[a-fA-F0-9]{64}$/;
 const AMOUNT = /^\d{1,30}(?:\.\d{1,36})?$/;
 const EXPLORER = "https://www.pharosscan.xyz";
+const WORKER_PUBLIC_URL = "https://pharos-on-chain-alert-bot.rajdeb1803.workers.dev";
 
 function validateTelegramCredentials(token, chatId) {
   const botToken = String(token || "").trim();
@@ -180,15 +181,9 @@ async function getState(db) {
   return db.prepare("SELECT * FROM bot_state WHERE id = 1").first();
 }
 
-async function processUpdates(env, credentials, state) {
-  const updates = await telegram(credentials.botToken, "getUpdates", {
-    offset: Number(state.telegram_offset) || 0,
-    limit: 100,
-    timeout: 0,
-    allowed_updates: ["message"],
-  });
-
-  for (const update of updates) {
+async function processUpdate(env, credentials, update) {
+  const latest = await getState(env.DB);
+  if (!Number.isInteger(update?.update_id) || update.update_id < (Number(latest?.telegram_offset) || 0)) return;
     const message = update.message;
     if (message && typeof message.text === "string") {
       const text = message.text.trim();
@@ -220,8 +215,35 @@ async function processUpdates(env, credentials, state) {
       }
     }
 
-    await env.DB.prepare("UPDATE bot_state SET telegram_offset = ? WHERE id = 1").bind(update.update_id + 1).run();
-  }
+  await env.DB.prepare("UPDATE bot_state SET telegram_offset = ? WHERE id = 1").bind(update.update_id + 1).run();
+}
+
+async function processUpdates(env, credentials, state) {
+  const updates = await telegram(credentials.botToken, "getUpdates", {
+    offset: Number(state.telegram_offset) || 0,
+    limit: 100,
+    timeout: 0,
+    allowed_updates: ["message"],
+  });
+  for (const update of updates) await processUpdate(env, credentials, update);
+}
+
+async function webhookSecret(token) {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+async function ensureWebhook(credentials, env) {
+  const url = `${WORKER_PUBLIC_URL}/telegram/webhook`;
+  const current = await telegram(credentials.botToken, "getWebhookInfo");
+  if (current.url === url) return true;
+  await telegram(credentials.botToken, "setWebhook", {
+    url,
+    secret_token: await webhookSecret(credentials.botToken),
+    allowed_updates: ["message"],
+    max_connections: 1,
+  });
+  return true;
 }
 
 async function scanChain(env, credentials) {
@@ -288,8 +310,11 @@ async function scheduledRun(env) {
     .bind(now + 120, now).run();
   if (!lock.meta?.changes) return;
   try {
-    const state = await getState(env.DB);
-    await processUpdates(env, credentials, state);
+    const webhookReady = await ensureWebhook(credentials, env).catch((error) => {
+      console.error("Telegram webhook setup failed.", error?.name || "Error");
+      return false;
+    });
+    if (!webhookReady) await processUpdates(env, credentials, await getState(env.DB));
     await scanChain(env, credentials);
   } finally {
     await env.DB.prepare("UPDATE bot_state SET locked_until = 0 WHERE id = 1").run();
@@ -301,7 +326,25 @@ export default {
     ctx.waitUntil(scheduledRun(env).catch(() => console.error("Scheduled Pharos alert run failed.")));
   },
 
-  async fetch(_request, env) {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    if (url.pathname === "/telegram/webhook") {
+      if (request.method !== "POST") return new Response("Method not allowed", { status: 405 });
+      try {
+        const credentials = validateTelegramCredentials(env.TELEGRAM_BOT_TOKEN, env.TELEGRAM_CHAT_ID);
+        const expected = await webhookSecret(credentials.botToken);
+        if (request.headers.get("X-Telegram-Bot-Api-Secret-Token") !== expected) {
+          return new Response("Unauthorized", { status: 401 });
+        }
+        await env.DB.prepare("INSERT OR IGNORE INTO bot_state (id) VALUES (1)").run();
+        await processUpdate(env, credentials, await request.json());
+        return new Response("ok");
+      } catch (error) {
+        console.error("Telegram webhook update failed.", error?.name || "Error");
+        return new Response("Temporary update processing failure", { status: 500 });
+      }
+    }
+
     let bot = "Telegram bot";
     let telegramStatus = "not_configured";
     try {
