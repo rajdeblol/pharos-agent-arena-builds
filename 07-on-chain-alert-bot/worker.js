@@ -190,12 +190,15 @@ async function processUpdates(env, credentials, state) {
 
   for (const update of updates) {
     const message = update.message;
-    if (message && String(message.chat?.id) === credentials.chatId && typeof message.text === "string") {
+    if (message && typeof message.text === "string") {
       const text = message.text.trim();
       const command = text.split(/\s+/, 1)[0].split("@")[0].toLowerCase();
-      if (command === "/start" || command === "/help") {
+      const actualChatId = String(message.chat?.id || "");
+      if (command === "/start" && actualChatId !== credentials.chatId && message.chat?.type === "private") {
+        await sendMessage(credentials.botToken, actualChatId, `The bot is online, but this chat is not configured yet. Set TELEGRAM_CHAT_ID to ${actualChatId} in the Cloudflare Worker secrets, then send /start again.`);
+      } else if (actualChatId === credentials.chatId && (command === "/start" || command === "/help")) {
         await sendMessage(credentials.botToken, credentials.chatId, helpText());
-      } else if (command === "/watch") {
+      } else if (actualChatId === credentials.chatId && command === "/watch") {
         const watch = parseWatchCommand(text);
         if (!watch) {
           await sendMessage(credentials.botToken, credentials.chatId, "Usage: /watch <token-address> <minimum> [wallet-address]. Use a valid Pharos ERC-20 address.");
@@ -204,15 +207,15 @@ async function processUpdates(env, credentials, state) {
             .bind(watch.token, watch.minimum, watch.wallet || null).run();
           await sendMessage(credentials.botToken, credentials.chatId, `Watch set for ${watch.token}; minimum ${watch.minimum}${watch.wallet ? `; wallet ${watch.wallet}` : ""}. The next scan sets a live baseline.`);
         }
-      } else if (command === "/pause") {
+      } else if (actualChatId === credentials.chatId && command === "/pause") {
         await env.DB.prepare("UPDATE bot_state SET token = NULL, minimum = NULL, wallet = NULL, last_block = NULL, symbol = NULL, decimals = NULL WHERE id = 1").run();
         await sendMessage(credentials.botToken, credentials.chatId, "Monitoring paused.");
-      } else if (command === "/status") {
+      } else if (actualChatId === credentials.chatId && command === "/status") {
         const latest = await getState(env.DB);
         await sendMessage(credentials.botToken, credentials.chatId, latest.token
           ? `Monitoring active.\nToken: ${latest.token}\nMinimum: ${latest.minimum}\nWallet filter: ${latest.wallet || "none"}\nLast block: ${latest.last_block ?? "baseline pending"}`
           : "Monitoring is paused. Use /watch <token-address> <minimum> [wallet-address] to start.");
-      } else {
+      } else if (actualChatId === credentials.chatId) {
         await sendMessage(credentials.botToken, credentials.chatId, "Unknown command. Send /help for options.");
       }
     }
