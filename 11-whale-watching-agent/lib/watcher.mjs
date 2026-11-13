@@ -87,7 +87,7 @@ function cleanWatchlist(input) {
     if (!new RegExp(`^\\d+(?:\\.\\d{1,${token.decimals}})?$`).test(value)) throw new Error(`${token.symbol} threshold must be a non-negative number with up to ${token.decimals} decimal places.`);
     thresholds[token.symbol] = value;
   }
-  const lookback = Number(input.lookback ?? 5000);
+  const lookback = Number(input.lookback ?? 1000);
   if (![1000, 5000, 10000].includes(lookback)) throw new Error("Choose a history window of 1,000, 5,000, or 10,000 blocks.");
   return { addresses: [...unique.values()], thresholds, lookback };
 }
@@ -202,7 +202,7 @@ export async function scanWhales(input, clientFactory = async () => {
       }
     }
     events.sort((a, b) => b.block - a.block || b.logIndex - a.logIndex);
-    const holdings = input.includeBalances === false ? [] : await Promise.all(config.addresses.map(async (wallet) => {
+    const holdings = input.includeBalances !== true ? [] : await Promise.all(config.addresses.map(async (wallet) => {
       try { return [wallet.address.toLowerCase(), await readHoldings(client, wallet, head)]; }
       catch { return [wallet.address.toLowerCase(), null]; }
     }));

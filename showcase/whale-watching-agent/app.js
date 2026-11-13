@@ -35,10 +35,10 @@ function renderSummary(data) {
       const outRaw = items.filter((item) => item.symbol === symbol && item.direction === "OUT").reduce((n, item) => n + BigInt(item.raw), 0n);
       const decimals = symbol === "USDC" ? 6 : 18;
       const compact = (raw) => { const scale = 10n ** BigInt(decimals); const whole = raw / scale; const frac = (raw % scale).toString().padStart(decimals, "0").slice(0, 2).replace(/0+$/, ""); return `${whole}${frac ? `.${frac}` : ""}`; };
-      stat.append(element("b", "", symbol), element("span", "", `IN ${compact(inRaw)} · OUT ${compact(outRaw)}`), element("small", "", `HOLD ${token.hold}`)); stats.append(stat);
+      stat.append(element("b", "", symbol), element("span", "", `IN ${compact(inRaw)} · OUT ${compact(outRaw)}`), element("small", "", `HOLD ${token.hold === "—" ? "OFF" : token.hold}`)); stats.append(stat);
     }
     const count = element("span", `move-total${items.length ? " active" : ""}`, `${items.length} MOVES · ${base.significantCount} LARGE`);
-    const largest = `PROS HOLD ${base.nativeHold} · ${base.largest ? `${base.largest.direction} ${base.largest.amount} ${base.largest.symbol}` : "No large moves"}`;
+    const largest = `PROS HOLD ${base.nativeHold === "—" ? "OFF" : base.nativeHold} · ${base.largest ? `${base.largest.direction} ${base.largest.amount} ${base.largest.symbol}` : "No large moves"}`;
     row.append(identity, stats, element("div", "summary-end", largest), count); list.append(row);
   }
 }
@@ -63,7 +63,7 @@ function renderMoves() {
 function render(data) {
   lastBlock = Math.max(lastBlock || 0, data.toBlock); $("scan-range").textContent = `BLOCKS ${scanStart.toLocaleString()}–${lastBlock.toLocaleString()}`;
   $("event-total").textContent = `${events.size.toLocaleString()} SIGNIFICANT MOVES`; const blockLink = $("block-link"); blockLink.href = `https://www.pharosscan.xyz/block/${lastBlock}`;
-  renderSummary(data); renderMoves(); $("snapshot-note").textContent = `Balance snapshot at block ${snapshotBlock.toLocaleString()} · flow totals cover the selected ${Number(activeConfig.lookback).toLocaleString()} block window.`;
+  renderSummary(data); renderMoves(); $("snapshot-note").textContent = `${activeConfig.includeBalances ? `Balance snapshot at block ${snapshotBlock.toLocaleString()}` : "Balance snapshot skipped for a faster scan"} · flow totals cover the selected ${Number(activeConfig.lookback).toLocaleString()} block window.`;
 }
 async function scan(payload) {
   const response = await fetch("/api/whale-watching", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
@@ -92,7 +92,7 @@ form.addEventListener("submit", async (event) => {
   event.preventDefault();
   if (watching) { stopWatching(); return; }
   const enteredAddresses = parseAddresses();
-  activeConfig = { addresses: enteredAddresses.length ? enteredAddresses : defaults.map(([address, label]) => ({ address, label })), thresholds: { USDC: $("usdc-threshold").value, WPROS: $("wpros-threshold").value }, lookback: Number($("lookback").value) };
+  activeConfig = { addresses: enteredAddresses.length ? enteredAddresses : defaults.map(([address, label]) => ({ address, label })), thresholds: { USDC: $("usdc-threshold").value, WPROS: $("wpros-threshold").value }, lookback: Number($("lookback").value), includeBalances: $("include-balances").checked };
   activity = new Map(); events = new Map(); initialSummary = []; lastBlock = null; setState(1); scanButton.disabled = true;
   try {
     const data = await scan(activeConfig); watching = true; scanButton.disabled = false; scanButton.classList.add("stop"); buttonLabel.textContent = "Stop watching";
