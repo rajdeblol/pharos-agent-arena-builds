@@ -7,6 +7,7 @@
   "functions": {
     "api/docs-search.mjs": { "maxDuration": 60 },
     "api/dapp-support.mjs": { "maxDuration": 30 },
-    "api/wallet-risk-checker.mjs": { "maxDuration": 30 }
+    "api/wallet-risk-checker.mjs": { "maxDuration": 30 },
+    "api/whale-watching.mjs": { "maxDuration": 60 }
   }
 }

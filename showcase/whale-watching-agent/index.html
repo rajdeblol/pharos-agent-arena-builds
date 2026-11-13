@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Track significant Pharos wallet transfers and compare recent activity across a configurable watchlist.">
+  <title>Whale Watching Agent — Pharos</title>
+  <link rel="stylesheet" href="/whale-watching-agent/styles.css">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/" aria-label="Pharos Builds home"><span class="brand-mark">P</span><span>PHAROS <span class="brand-slash">/</span> WHALE WATCH</span></a><div class="bar-actions"><span class="network"><i></i> PACIFIC · 1672</span><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">DARK</button><a class="top-link" href="https://github.com/PharosNetwork/pharos-mcp" target="_blank" rel="noreferrer">CHAIN MCP ↗</a></div></header>
+  <main class="page-shell">
+    <section class="hero"><div class="eyebrow"><span>READ ONLY</span><i></i><span>WALLET ACTIVITY MONITOR</span></div><h1>Watch the moves.<br><em>See the context.</em></h1><p class="hero-copy">Track a group of Pharos addresses, set what counts as significant, and review recent activity in one place.</p><div class="hero-note"><span class="note-mark">↳</span><span>Live transfer logs · USDC and WPROS · no wallet connection</span></div></section>
+    <section class="workspace" aria-label="Whale watch scanner">
+      <form class="scan-card" id="scan-form" novalidate>
+        <div class="card-heading"><span class="step">01</span><span>WATCHLIST &amp; FILTERS</span><span class="network-tag">PHAROS PACIFIC</span></div>
+        <label class="field-label" for="addresses">ADDRESSES <span>one per line · address | label</span></label>
+        <textarea id="addresses" rows="8" spellcheck="false" autocapitalize="off"></textarea>
+        <div class="form-meta"><span id="address-count">8 addresses loaded</span><span>5 MIN · 20 MAX</span></div>
+        <div class="threshold-grid"><label><span class="field-label">USDC THRESHOLD</span><span class="input-wrap"><input id="usdc-threshold" type="number" min="0" step="any" value="50"><b>USDC</b></span></label><label><span class="field-label">WPROS THRESHOLD</span><span class="input-wrap"><input id="wpros-threshold" type="number" min="0" step="any" value="20"><b>WPROS</b></span></label></div>
+        <label class="field-label lookback-label" for="lookback">HISTORY WINDOW</label><select id="lookback"><option value="1000">Latest 1,000 blocks</option><option value="3000">Latest 3,000 blocks</option><option value="5000">Latest 5,000 blocks</option></select>
+        <button class="scan-button" id="scan-button" type="submit"><span id="button-label">Scan recent activity</span><span aria-hidden="true">↗</span></button>
+        <p class="privacy-note">⌑ Reads public Pharos Chain MCP data. Nothing is signed or sent.</p>
+      </form>
+      <section class="report-card" id="report-card" aria-live="polite" aria-busy="false">
+        <div class="report-topline"><div class="card-heading"><span class="step">02</span><span>ACTIVITY REPORT</span></div><span class="report-status" id="report-status">READY TO SCAN</span></div>
+        <div class="empty-state" id="empty-state"><div class="empty-icon">↗</div><h2>Start with your watchlist.</h2><p>We’ll scan recent token transfers, flag moves above your thresholds, and summarize each wallet.</p><div class="empty-line"><span></span><code>WALLETS → TRANSFERS → CONTEXT</code></div></div>
+        <div class="loading-state" id="loading-state" hidden><div class="loader"></div><h2>Scanning Pharos…</h2><p>Reading recent USDC and WPROS transfer logs. This can take a few seconds.</p></div>
+        <div class="error-state" id="error-state" hidden><div class="error-icon">!</div><div><h2>Could not complete the scan.</h2><p id="error-message">Check the watchlist and try again.</p></div></div>
+        <div class="results" id="results" hidden>
+          <div class="scan-meta"><span id="scan-range">BLOCK —</span><span id="event-total">0 SIGNIFICANT MOVES</span></div>
+          <div class="summary-head"><h2>Wallet summary</h2><span>RECENT ACTIVITY</span></div><div class="summary-list" id="summary-list"></div>
+          <div class="moves-head"><h2>Significant moves</h2><span id="move-count">0 MOVES</span></div><div class="move-list" id="move-list"></div>
+          <div class="report-foot"><span>USDC + WPROS · PHAROS PACIFIC</span><a id="block-link" href="#" target="_blank" rel="noreferrer">OPEN LATEST BLOCK ↗</a></div>
+        </div>
+      </section>
+    </section>
+  </main>
+  <footer class="footer"><span>PHAROS BUILDS / 2026</span><span>READ ONLY · PUBLIC CHAIN DATA</span><a href="https://pharos-agent-arena.vercel.app/tasks/whale-watching-agent" target="_blank" rel="noreferrer">AGENT ARENA TASK ↗</a></footer>
+  <script type="module" src="/whale-watching-agent/app.js"></script>
+</body>
+</html>
