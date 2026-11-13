@@ -6,7 +6,7 @@ import {
   PHAROS_MCP_URL,
   TOKENS,
   TRANSFER_TOPIC,
-} from "../config/pharos.mjs";
+} from "./config/pharos.mjs";
 
 function amountUnits(value, decimals) {
   const [whole, fraction = ""] = String(value).split(".");
