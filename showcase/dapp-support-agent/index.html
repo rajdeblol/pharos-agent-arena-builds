@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Understand failed Pharos transactions with a plain-language, evidence-based diagnosis from Chain MCP.">
+  <title>dApp Support Agent — Pharos</title>
+  <link rel="stylesheet" href="/dapp-support-agent/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Pharos Builds home"><span class="brand-mark">P</span><span>PHAROS <span class="brand-slash">/</span> TX SUPPORT</span></a>
+    <div class="bar-actions"><span class="network"><i></i> PACIFIC · 1672</span><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">DARK</button><a class="top-link" href="https://github.com/PharosNetwork/pharos-mcp" target="_blank" rel="noreferrer">CHAIN MCP ↗</a></div>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero">
+      <div class="eyebrow"><span>READ ONLY</span><i></i><span>PHAROS CHAIN MCP</span></div>
+      <h1>A failed tx,<br><em>explained.</em></h1>
+      <p class="hero-copy">Paste a Pharos transaction hash. Get the likely cause, what the chain evidence says, and a practical next step.</p>
+      <div class="hero-note"><span class="note-mark">↳</span><span>Evidence first. No wallet connection, private key, or transaction signing.</span></div>
+    </section>
+
+    <section class="workbench" aria-label="Transaction support agent">
+      <form id="inspect-form" class="inspect-card" novalidate>
+        <div class="card-heading"><span class="step">01</span><label for="tx-hash">TRANSACTION HASH</label><span class="network-tag">PHAROS MAINNET</span></div>
+        <div class="hash-field"><span class="hash-prefix">0x</span><input id="tx-hash" name="hash" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="66" placeholder="Paste a 66-character transaction hash" aria-describedby="hash-note hash-count"><button class="clear-button" id="clear-hash" type="button" aria-label="Clear transaction hash">×</button></div>
+        <div class="form-meta"><span id="hash-note">Pharos Pacific mainnet · 0x + 64 hexadecimal characters</span><span id="hash-count">0 / 66</span></div>
+        <div class="form-actions"><a href="https://www.pharosscan.xyz/txs" target="_blank" rel="noreferrer">Find a transaction on PharosScan ↗</a><button class="inspect-button" id="inspect-button" type="submit"><span id="button-label">Explain this transaction</span><span aria-hidden="true">↗</span></button></div>
+        <p class="privacy-note"><span>⌑</span> Reads transaction + receipt through Pharos Chain MCP. Never broadcasts a transaction.</p>
+      </form>
+
+      <section class="result-card" id="result-card" aria-live="polite" aria-busy="false">
+        <div class="result-topline"><div class="card-heading"><span class="step">02</span><span>THE DIAGNOSIS</span></div><span class="result-status" id="result-status">WAITING FOR A HASH</span></div>
+        <div class="empty-state" id="empty-state"><div class="empty-icon"><span>?</span></div><h2>Bring the transaction details.</h2><p>The agent will check its receipt, estimate a failure cause, and link the chain evidence.</p><div class="empty-line"><span></span><code>TRANSACTION → RECEIPT → REASON → NEXT STEP</code></div></div>
+        <div class="loading-state" id="loading-state" hidden><div class="loader"></div><h2>Reading the chain…</h2><p>Fetching the transaction and receipt through Pharos Chain MCP.</p></div>
+        <div class="error-state" id="error-state" hidden><div class="error-icon">!</div><div><h2>Could not inspect this transaction.</h2><p id="error-message">Check the hash and try again.</p></div></div>
+        <div class="analysis-state" id="analysis-state" hidden>
+          <div class="analysis-heading"><div><span class="micro-label" id="diagnosis-type">FAILURE TYPE</span><h2 id="diagnosis-title">Diagnosis</h2></div><span class="confidence" id="confidence">—</span></div>
+          <p class="explanation" id="explanation"></p>
+          <div class="fix-panel"><span class="micro-label">WHAT TO TRY</span><p id="fix"></p></div>
+          <div class="tx-facts" id="tx-facts"></div>
+          <div class="evidence-block"><div class="micro-label">CHAIN EVIDENCE</div><ul id="evidence-list"></ul></div>
+          <div class="result-footer"><span>VIA PHAROS CHAIN MCP</span><a id="explorer-link" href="#" target="_blank" rel="noreferrer">VIEW ON PHAROSSCAN ↗</a></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="capabilities">
+      <div class="capability-title"><span class="step">03</span><div><span class="eyebrow">WHAT IT CHECKS</span><h2>Find the reason.<br><em>Pick a safer next step.</em></h2></div></div>
+      <div class="capability-list">
+        <article><span>01</span><div><h3>Gas ran out</h3><p>Compares gas used with the transaction’s gas limit.</p></div></article>
+        <article><span>02</span><div><h3>Balance or allowance</h3><p>Looks for readable revert reasons tied to funds or token approval.</p></div></article>
+        <article><span>03</span><div><h3>Contract conditions</h3><p>Checks revert text for slippage, deadlines, and access restrictions.</p></div></article>
+      </div>
+      <p class="method-note">When a revert reason is available, the agent replays the call at the preceding block to decode it. Replays are diagnostic estimates; contract state can change within a block.</p>
+    </section>
+  </main>
+
+  <footer class="footer"><span>PHAROS BUILDS / 2026</span><span>TRANSACTION DATA IS PUBLIC CHAIN DATA</span><a href="https://pharos-agent-arena.vercel.app/tasks/dapp-support-agent" target="_blank" rel="noreferrer">AGENT ARENA TASK ↗</a></footer>
+  <script type="module" src="/dapp-support-agent/app.js"></script>
+</body>
+</html>

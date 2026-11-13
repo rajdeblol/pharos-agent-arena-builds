@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "workspaces": ["01-read-contract-state", "02-policy-gatekeeper", "03-event-log-monitor", "06-doc-search-cli", "07-on-chain-alert-bot"],
+  "workspaces": ["01-read-contract-state", "02-policy-gatekeeper", "03-event-log-monitor", "06-doc-search-cli", "07-on-chain-alert-bot", "08-dapp-support-agent"],
   "scripts": {
     "contract": "npm run start --workspace=pharos-contract-field-notes",
     "gatekeeper": "npm run start --workspace=policy-gatekeeper",
     "showcase": "python3 -m http.server 4175 --directory showcase",
     "event-monitor": "npm run start --workspace=pharos-event-log-monitor",
     "onchain-alert": "npm run dev --workspace=pharos-on-chain-alert-bot",
-    "onchain-alert:deploy": "npm run deploy --workspace=pharos-on-chain-alert-bot"
+    "onchain-alert:deploy": "npm run deploy --workspace=pharos-on-chain-alert-bot",
+    "dapp-support:test": "npm test --workspace=pharos-dapp-support-agent"
   },
   "engines": { "node": ">=20" }
 }

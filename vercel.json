@@ -4,5 +4,8 @@
   "buildCommand": null,
   "outputDirectory": "showcase",
   "cleanUrls": true,
-  "functions": { "api/docs-search.mjs": { "maxDuration": 60 } }
+  "functions": {
+    "api/docs-search.mjs": { "maxDuration": 60 },
+    "api/dapp-support.mjs": { "maxDuration": 30 }
+  }
 }

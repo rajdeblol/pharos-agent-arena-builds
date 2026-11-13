@@ -17,6 +17,7 @@ The home page and demos open in white mode. Use the top-right control to switch 
 | 05 | Arbitrage Scanner | Chain MCP | Hard | 200 | [05-arbitrage-scanner](./05-arbitrage-scanner/) | [Open demo](https://pharos-arb-scanner-raj.vercel.app/) |
 | 06 | Doc-Search CLI | Developer Docs MCP | Easy | 50 | [06-doc-search-cli](./06-doc-search-cli/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/doc-search) |
 | 07 | On-Chain Alert Bot | Chain MCP · Telegram | Easy | 50 | [07-on-chain-alert-bot](./07-on-chain-alert-bot/) | [Bot setup](./07-on-chain-alert-bot/README.md) |
+| 08 | dApp Support Agent | Chain MCP | Easy | 50 | [08-dapp-support-agent](./08-dapp-support-agent/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/dapp-support-agent) |
 
 ## Quick start
 
@@ -39,6 +40,8 @@ Run the docs search CLI with `cd 06-doc-search-cli && npm ci && npm link`, then 
 
 Deploy the free scheduled Telegram alert bot with `cd 07-on-chain-alert-bot`, then follow its README to create D1, set private Worker secrets, and deploy with Wrangler.
 
+Run the dApp Support Agent checks with `npm run dapp-support:test`. The demo reads transactions through the public Pharos Chain MCP endpoint and never signs or broadcasts.
+
 Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-mcp-onboarding/public`.
 
 ## Layout
@@ -50,6 +53,7 @@ Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-m
     05-arbitrage-scanner/     two-source read-only arbitrage comparison
     06-doc-search-cli/        sourced Pharos docs answers from a terminal
     07-on-chain-alert-bot/    read-only ERC-20 transfer alerts sent to Telegram
+    08-dapp-support-agent/    plain-language failed transaction analysis via Chain MCP
     showcase/                 static landing page for the demos
 
 ## Notes
