@@ -11,7 +11,7 @@
 <body>
   <header class="topbar">
     <a class="brand" href="/" aria-label="Pharos Builds home"><span class="brand-mark">P</span><span>PHAROS <span class="brand-slash">/</span> RISK CHECK</span></a>
-    <div class="bar-actions"><span class="network"><i></i> PACIFIC · 1672</span><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">DARK</button><a class="top-link" href="https://github.com/PharosNetwork/pharos-mcp" target="_blank" rel="noreferrer">CHAIN MCP ↗</a></div>
+    <div class="bar-actions"><span class="network"><i></i> PACIFIC · 1672</span><details class="info-menu"><summary class="info-toggle">INFO <span aria-hidden="true">+</span></summary><div class="info-panel"><span class="micro-label">HOW TO READ A CHECK</span><p>Risk signals are clues, not a guarantee. Unknown contracts are not automatically malicious; the activity check only covers the selected recent USDC block window, and blacklist status applies only to Circle USDC.</p></div></details><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">DARK</button><a class="top-link" href="https://github.com/PharosNetwork/pharos-mcp" target="_blank" rel="noreferrer">CHAIN MCP ↗</a></div>
   </header>
 
   <main class="page-shell">
@@ -60,7 +60,6 @@
         <article><span>02</span><div><h3>USDC controls</h3><p>Checks Circle’s Pharos USDC blacklist and currently active allowances found in recent approval events.</p></div></article>
         <article><span>03</span><div><h3>Recent activity</h3><p>Scans Circle USDC transfers and approvals in the selected, clearly reported block window.</p></div></article>
       </div>
-      <p class="method-note">Unknown contracts are not automatically called malicious. Recent history is not a full wallet history, and blacklist status only covers Circle USDC. A low result is not a guarantee.</p>
     </section>
   </main>
 
