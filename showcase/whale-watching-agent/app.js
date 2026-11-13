@@ -105,7 +105,7 @@ form.addEventListener("submit", async (event) => {
   activeConfig = { addresses: enteredAddresses.length ? enteredAddresses : defaults.map(([address, label]) => ({ address, label })), thresholds: { USDC: $("usdc-threshold").value, WPROS: $("wpros-threshold").value }, lookback: Number($("lookback").value), includeBalances: $("include-balances").checked };
   activity = new Map(); events = new Map(); initialSummary = []; lastBlock = null; scanActive = true; setState(1); scanButton.disabled = false; scanButton.classList.add("stop"); buttonLabel.textContent = "Stop scanning";
   try {
-    const data = await scan(activeConfig); if (!scanActive) return; scanActive = false; watching = true; scanButton.disabled = false; buttonLabel.textContent = "Stop watching";
+    const data = await scan(activeConfig); if (!scanActive) return; scanActive = false; watching = true; setState(3); scanButton.disabled = false; buttonLabel.textContent = "Stop watching";
     $("watch-status").classList.add("is-live"); $("watch-message").textContent = `Watching ${activeConfig.addresses.length} wallets · checked through ${data.toBlock.toLocaleString()}`;
     $("report-status").textContent = "LIVE WATCHING"; schedulePoll();
   } catch (error) { if (error.name === "AbortError") return; scanActive = false; $("error-message").textContent = error.message || "Check your connection and try again."; setState(2); scanButton.disabled = false; scanButton.classList.remove("stop"); buttonLabel.textContent = "Start watching"; }
