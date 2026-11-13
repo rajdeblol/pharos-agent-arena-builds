@@ -56,15 +56,15 @@ function logsFrom(value) {
   return Array.isArray(logs) ? logs : [];
 }
 
-async function getLogsPaged(client, token, fromBlock, toBlock) {
+async function getLogsPaged(client, token, fromBlock, toBlock, topics) {
   try {
-    return logsFrom(await call(client, "get_logs", { address: token.address, topics: [TRANSFER_TOPIC], fromBlock, toBlock }));
+    return logsFrom(await call(client, "get_logs", { address: token.address, topics, fromBlock, toBlock }));
   } catch (error) {
     if (fromBlock >= toBlock || !/too many|result limit|response.{0,12}(too |size)|exceeded|payload|max logs|query returned more/i.test(error.message)) throw error;
     const midpoint = fromBlock + Math.floor((toBlock - fromBlock) / 2);
     const [left, right] = await Promise.all([
-      getLogsPaged(client, token, fromBlock, midpoint),
-      getLogsPaged(client, token, midpoint + 1, toBlock),
+      getLogsPaged(client, token, fromBlock, midpoint, topics),
+      getLogsPaged(client, token, midpoint + 1, toBlock, topics),
     ]);
     return [...left, ...right];
   }
@@ -86,8 +86,8 @@ function cleanWatchlist(input) {
     if (!new RegExp(`^\\d+(?:\\.\\d{1,${token.decimals}})?$`).test(value)) throw new Error(`${token.symbol} threshold must be a non-negative number with up to ${token.decimals} decimal places.`);
     thresholds[token.symbol] = value;
   }
-  const lookback = Number(input.lookback ?? 1000);
-  if (![1000, 3000, 5000].includes(lookback)) throw new Error("Choose a history window of 1,000, 3,000, or 5,000 blocks.");
+  const lookback = Number(input.lookback ?? 5000);
+  if (![1000, 5000, 10000].includes(lookback)) throw new Error("Choose a history window of 1,000, 5,000, or 10,000 blocks.");
   return { addresses: [...unique.values()], thresholds, lookback };
 }
 
@@ -116,6 +116,23 @@ function human(raw, decimals, places = 2) {
   return fraction ? `${whole}.${fraction}` : String(whole);
 }
 
+function balanceValue(value) {
+  const result = nested(value, ["balanceWei", "balanceHex", "result", "balance"]);
+  if (result === undefined || result === null || result === "") throw new Error("Balance response was empty.");
+  return BigInt(result);
+}
+
+async function readHoldings(client, wallet, block) {
+  const tokenCalls = TOKENS.map(async (token) => {
+    const data = `0x70a08231${wallet.address.slice(2).toLowerCase().padStart(64, "0")}`;
+    const raw = balanceValue(await call(client, "eth_call", { transaction: { to: token.address, data }, block }));
+    return [token.symbol, human(raw, token.decimals, 4)];
+  });
+  const nativeCall = call(client, "get_balance", { address: wallet.address, block }).then((result) => human(balanceValue(result), 18, 4));
+  const [tokens, native] = await Promise.all([Promise.all(tokenCalls), nativeCall]);
+  return { tokens: Object.fromEntries(tokens), native };
+}
+
 export function explain(event, watched, labels, threshold) {
   const counterpartAddress = event.direction === "OUT" ? event.to : event.from;
   const counterpart = labels.get(counterpartAddress) || counterpartAddress;
@@ -139,24 +156,33 @@ export async function scanWhales(input, clientFactory = async () => {
   const client = await clientFactory();
   try {
     const head = parseBlock(await call(client, "get_block_number"));
-    const start = Math.max(0, head - config.lookback + 1);
+    const start = Math.max(0, Number.isSafeInteger(Number(input.fromBlock)) ? Number(input.fromBlock) : head - config.lookback + 1);
     const chunks = [];
     for (let from = start; from <= head; from += 1000) chunks.push({ fromBlock: from, toBlock: Math.min(head, from + 999) });
-    const allLogs = await Promise.all(TOKENS.flatMap((token) => chunks.map(async (chunk) => ({
-      token,
-      logs: await getLogsPaged(client, token, chunk.fromBlock, chunk.toBlock),
-    }))));
+    const topicsFor = (addresses) => addresses.length ? addresses.map(({ address }) => `0x${address.slice(2).toLowerCase().padStart(64, "0")}`) : [];
+    const watchedTopics = topicsFor(config.addresses);
+    const allLogs = await Promise.all(TOKENS.flatMap((token) => chunks.flatMap((chunk) => [
+      { token, chunk, topics: [TRANSFER_TOPIC, watchedTopics] },
+      { token, chunk, topics: [TRANSFER_TOPIC, null, watchedTopics] },
+    ].map(async ({ topics, ...item }) => ({
+      ...item,
+      logs: await getLogsPaged(client, token, chunk.fromBlock, chunk.toBlock, topics),
+    })))));
     const addresses = new Map(config.addresses.map((item) => [item.address.toLowerCase(), item]));
     const events = [];
     const activity = [];
+    const seenLogs = new Set();
     for (const result of allLogs) for (const log of result.logs) {
       const decoded = decode(log, result.token);
       if (!decoded) continue;
+      const logKey = `${decoded.tx}:${decoded.logIndex}`;
+      if (seenLogs.has(logKey)) continue;
+      seenLogs.add(logKey);
       const from = addresses.get(decoded.from);
       const to = addresses.get(decoded.to);
       if (!from && !to) continue;
       for (const [wallet, direction] of [[from, "OUT"], [to, "IN"]]) {
-        if (wallet) activity.push({ wallet: wallet.address, symbol: decoded.symbol, direction, raw: decoded.raw });
+        if (wallet) activity.push({ id: `${logKey}:${wallet.address.toLowerCase()}:${direction}`, wallet: wallet.address, symbol: decoded.symbol, direction, raw: decoded.raw.toString(), block: decoded.block });
       }
       const threshold = config.thresholds[decoded.symbol];
       const minimum = amountUnits(threshold, decoded.decimals);
@@ -175,17 +201,24 @@ export async function scanWhales(input, clientFactory = async () => {
       }
     }
     events.sort((a, b) => b.block - a.block || b.logIndex - a.logIndex);
+    const holdings = input.includeBalances === false ? [] : await Promise.all(config.addresses.map(async (wallet) => {
+      try { return [wallet.address.toLowerCase(), await readHoldings(client, wallet, head)]; }
+      catch { return [wallet.address.toLowerCase(), null]; }
+    }));
+    const holdingMap = new Map(holdings);
     const summary = config.addresses.map((wallet) => {
       const walletActivity = activity.filter((item) => item.wallet.toLowerCase() === wallet.address.toLowerCase());
       const byToken = Object.fromEntries(TOKENS.map((token) => {
         const tokenActivity = walletActivity.filter((item) => item.symbol === token.symbol);
-        const incoming = tokenActivity.filter((item) => item.direction === "IN").reduce((sum, item) => sum + item.raw, 0n);
-        const outgoing = tokenActivity.filter((item) => item.direction === "OUT").reduce((sum, item) => sum + item.raw, 0n);
-        return [token.symbol, { in: human(incoming, token.decimals), out: human(outgoing, token.decimals), count: tokenActivity.length }];
+        const incoming = tokenActivity.filter((item) => item.direction === "IN").reduce((sum, item) => sum + BigInt(item.raw), 0n);
+        const outgoing = tokenActivity.filter((item) => item.direction === "OUT").reduce((sum, item) => sum + BigInt(item.raw), 0n);
+        return [token.symbol, { in: human(incoming, token.decimals), out: human(outgoing, token.decimals), hold: holdingMap.get(wallet.address.toLowerCase())?.tokens?.[token.symbol] ?? "—", count: tokenActivity.length }];
       }));
-      return { ...wallet, count: walletActivity.length, significantCount: events.filter((item) => item.wallet.toLowerCase() === wallet.address.toLowerCase()).length, byToken };
+      const walletMoves = events.filter((item) => item.wallet.toLowerCase() === wallet.address.toLowerCase());
+      const largest = walletMoves.reduce((top, item) => !top || BigInt(item.raw) > BigInt(top.raw) ? item : top, null);
+      return { ...wallet, count: walletActivity.length, significantCount: walletMoves.length, byToken, nativeHold: holdingMap.get(wallet.address.toLowerCase())?.native ?? "—", largest: largest ? { amount: largest.amount, symbol: largest.symbol, direction: largest.direction, block: largest.block } : null };
     });
-    return { chainId: 1672, fromBlock: start, toBlock: head, lookback: config.lookback, scannedTokens: TOKENS.map(({ symbol }) => symbol), watchlist: config.addresses, thresholds: config.thresholds, eventCount: events.length, events: events.slice(0, 100), summary };
+    return { chainId: 1672, fromBlock: start, toBlock: head, lookback: config.lookback, scannedTokens: TOKENS.map(({ symbol }) => symbol), watchlist: config.addresses, thresholds: config.thresholds, eventCount: events.length, activity, events: events.slice(0, 250), summary };
   } finally {
     await client.close().catch(() => {});
   }

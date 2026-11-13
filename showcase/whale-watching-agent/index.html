@@ -17,8 +17,8 @@
         <textarea id="addresses" rows="8" spellcheck="false" autocapitalize="off"></textarea>
         <div class="form-meta"><span id="address-count">8 addresses loaded</span><span>5 MIN · 20 MAX</span></div>
         <div class="threshold-grid"><label><span class="field-label">USDC THRESHOLD</span><span class="input-wrap"><input id="usdc-threshold" type="number" min="0" step="any" value="50"><b>USDC</b></span></label><label><span class="field-label">WPROS THRESHOLD</span><span class="input-wrap"><input id="wpros-threshold" type="number" min="0" step="any" value="20"><b>WPROS</b></span></label></div>
-        <label class="field-label lookback-label" for="lookback">HISTORY WINDOW</label><select id="lookback"><option value="1000">Latest 1,000 blocks</option><option value="3000">Latest 3,000 blocks</option><option value="5000">Latest 5,000 blocks</option></select>
-        <button class="scan-button" id="scan-button" type="submit"><span id="button-label">Scan recent activity</span><span aria-hidden="true">↗</span></button>
+        <label class="field-label lookback-label" for="lookback">HISTORY WINDOW</label><select id="lookback"><option value="1000">Latest 1,000 blocks</option><option value="5000" selected>Latest 5,000 blocks</option><option value="10000">Latest 10,000 blocks</option></select>
+        <button class="scan-button" id="scan-button" type="submit"><span id="button-label">Start watching</span><span aria-hidden="true">↗</span></button>
         <p class="privacy-note">⌑ Reads public Pharos Chain MCP data. Nothing is signed or sent.</p>
       </form>
       <section class="report-card" id="report-card" aria-live="polite" aria-busy="false">
@@ -28,8 +28,11 @@
         <div class="error-state" id="error-state" hidden><div class="error-icon">!</div><div><h2>Could not complete the scan.</h2><p id="error-message">Check the watchlist and try again.</p></div></div>
         <div class="results" id="results" hidden>
           <div class="scan-meta"><span id="scan-range">BLOCK —</span><span id="event-total">0 SIGNIFICANT MOVES</span></div>
-          <div class="summary-head"><h2>Wallet summary</h2><span>RECENT ACTIVITY</span></div><div class="summary-list" id="summary-list"></div>
-          <div class="moves-head"><h2>Significant moves</h2><span id="move-count">0 MOVES</span></div><div class="move-list" id="move-list"></div>
+          <div class="watch-status" id="watch-status"><span class="live-dot"></span><span id="watch-message">Watching for new transfers</span><span id="next-check">NEXT SCAN IN 7S</span></div>
+          <div class="summary-head"><h2>Wallet balances &amp; flow</h2><span>SNAPSHOT + WINDOW TOTALS</span></div><div class="summary-list" id="summary-list"></div>
+          <div class="moves-head"><h2>Significant moves</h2><span id="move-count">0 MOVES</span></div>
+          <div class="table-wrap"><table class="move-table"><thead><tr><th>BLOCK</th><th>DIR</th><th>AMOUNT</th><th>FROM</th><th>TO</th><th>TX</th></tr></thead><tbody id="move-list"></tbody></table></div>
+          <p class="snapshot-note" id="snapshot-note"></p><aside class="move-detail" id="move-detail" hidden></aside>
           <div class="report-foot"><span>USDC + WPROS · PHAROS PACIFIC</span><a id="block-link" href="#" target="_blank" rel="noreferrer">OPEN LATEST BLOCK ↗</a></div>
         </div>
       </section>
