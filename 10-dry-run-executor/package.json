@@ -1,0 +1,17 @@
+{
+  "name": "pharos-dry-run",
+  "version": "1.0.0",
+  "description": "Dry-run a Pacific transaction in 3D before anything is signed. Read-only.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dry-run": "node tasks/dry-run/dry-run.js",
+    "web": "node scripts/dev-server.js",
+    "test": "node --test test/dry-run.test.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "viem": "^2.57.5"
+  }
+}
