@@ -9,9 +9,8 @@ const form = $("scan-form"), addressField = $("addresses"), report = $("report-c
 const stateNodes = [$("empty-state"), $("loading-state"), $("error-state"), $("results")];
 let watchTimer = null, countdownTimer = null, watching = false, activeConfig = null, nextAt = 0, lastBlock = null;
 let activity = new Map(), events = new Map(), initialSummary = [], scanStart = 0, snapshotBlock = 0;
-addressField.value = defaults.map(([address, label]) => `${address} | ${label}`).join("\n");
 function parseAddresses() { return addressField.value.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).map((line, index) => { const [address, ...labels] = line.split("|"); return { address: address.trim(), label: labels.join("|").trim() || `Wallet ${index + 1}` }; }); }
-function updateCount() { const count = parseAddresses().length; $("address-count").textContent = `${count} ${count === 1 ? "address" : "addresses"} loaded`; $("address-count").classList.toggle("count-warning", count < 5 || count > 20); }
+function updateCount() { const count = parseAddresses().length; $("address-count").textContent = count ? `${count} custom ${count === 1 ? "wallet" : "wallets"}` : "Using preset watchlist · 8 wallets"; $("address-count").classList.toggle("count-warning", count > 20); }
 addressField.addEventListener("input", updateCount);
 function setState(state) { stateNodes.forEach((node, index) => { node.hidden = index !== state; }); report.setAttribute("aria-busy", String(state === 1)); $("report-status").textContent = ["READY TO SCAN", "READING PHAROS", "SCAN FAILED", watching ? "LIVE WATCHING" : "SCAN COMPLETE"][state]; }
 function element(tag, className, text) { const node = document.createElement(tag); if (className) node.className = className; if (text !== undefined) node.textContent = text; return node; }
@@ -92,7 +91,8 @@ function stopWatching() { watching = false; clearTimeout(watchTimer); clearInter
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   if (watching) { stopWatching(); return; }
-  activeConfig = { addresses: parseAddresses(), thresholds: { USDC: $("usdc-threshold").value, WPROS: $("wpros-threshold").value }, lookback: Number($("lookback").value) };
+  const enteredAddresses = parseAddresses();
+  activeConfig = { addresses: enteredAddresses.length ? enteredAddresses : defaults.map(([address, label]) => ({ address, label })), thresholds: { USDC: $("usdc-threshold").value, WPROS: $("wpros-threshold").value }, lookback: Number($("lookback").value) };
   activity = new Map(); events = new Map(); initialSummary = []; lastBlock = null; setState(1); scanButton.disabled = true;
   try {
     const data = await scan(activeConfig); watching = true; scanButton.disabled = false; scanButton.classList.add("stop"); buttonLabel.textContent = "Stop watching";

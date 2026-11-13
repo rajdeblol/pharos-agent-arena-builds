@@ -71,14 +71,15 @@ async function getLogsPaged(client, token, fromBlock, toBlock, topics) {
 }
 
 function cleanWatchlist(input) {
-  const addresses = (Array.isArray(input.addresses) ? input.addresses : []).map((item, index) => {
+  const supplied = Array.isArray(input.addresses) ? input.addresses : [];
+  const addresses = (supplied.length ? supplied : DEFAULT_ADDRESSES).map((item, index) => {
     const address = String(item.address ?? "").trim();
     if (!/^0x[\da-f]{40}$/i.test(address)) throw new Error(`Address ${index + 1} is not a valid EVM address.`);
     const label = String(item.label ?? "").trim().slice(0, 48) || `Wallet ${index + 1}`;
     return { address, label };
   });
   const unique = new Map(addresses.map((item) => [item.address.toLowerCase(), item]));
-  if (unique.size < 5) throw new Error("Add at least five different wallet addresses.");
+  if (unique.size < 1) throw new Error("Add at least one wallet address.");
   if (unique.size > 20) throw new Error("Track up to 20 wallet addresses at a time.");
   const thresholds = {};
   for (const token of TOKENS) {

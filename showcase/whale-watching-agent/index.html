@@ -13,9 +13,9 @@
     <section class="workspace" aria-label="Whale watch scanner">
       <form class="scan-card" id="scan-form" novalidate>
         <div class="card-heading"><span class="step">01</span><span>WATCHLIST &amp; FILTERS</span><span class="network-tag">PHAROS PACIFIC</span></div>
-        <label class="field-label" for="addresses">ADDRESSES <span>one per line · address | label</span></label>
-        <textarea id="addresses" rows="8" spellcheck="false" autocapitalize="off"></textarea>
-        <div class="form-meta"><span id="address-count">8 addresses loaded</span><span>5 MIN · 20 MAX</span></div>
+        <label class="field-label" for="addresses">WALLETS TO WATCH <span>OPTIONAL · one per line</span></label>
+        <textarea id="addresses" rows="5" spellcheck="false" autocapitalize="off" placeholder="Leave blank to use the preset watchlist&#10;Add a wallet as: address | label"></textarea>
+        <div class="form-meta"><span id="address-count">Using preset watchlist · 8 wallets</span><span>1 MIN · 20 MAX</span></div>
         <div class="threshold-grid"><label><span class="field-label">USDC THRESHOLD</span><span class="input-wrap"><input id="usdc-threshold" type="number" min="0" step="any" value="50"><b>USDC</b></span></label><label><span class="field-label">WPROS THRESHOLD</span><span class="input-wrap"><input id="wpros-threshold" type="number" min="0" step="any" value="20"><b>WPROS</b></span></label></div>
         <label class="field-label lookback-label" for="lookback">HISTORY WINDOW</label><select id="lookback"><option value="1000">Latest 1,000 blocks</option><option value="5000" selected>Latest 5,000 blocks</option><option value="10000">Latest 10,000 blocks</option></select>
         <button class="scan-button" id="scan-button" type="submit"><span id="button-label">Start watching</span><span aria-hidden="true">↗</span></button>

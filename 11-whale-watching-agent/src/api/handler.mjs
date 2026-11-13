@@ -9,7 +9,7 @@ export default async function handler(request, response) {
     return response.status(200).json(await scanWhales(request.body ?? {}));
   } catch (error) {
     const message = String(error?.message || "");
-    if (/at least five|up to 20|not a valid EVM|threshold|history window/i.test(message)) {
+    if (/at least one|up to 20|not a valid EVM|threshold|history window/i.test(message)) {
       return response.status(400).json({ error: message });
     }
     return response.status(502).json({ error: /429|rate.?limit|timeout|fetch failed|network|socket|temporarily/i.test(message)
