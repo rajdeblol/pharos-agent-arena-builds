@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="Check a Pharos wallet or contract against live, read-only chain risk signals before interacting.">
+  <title>Wallet Risk Checker — Pharos</title>
+  <link rel="stylesheet" href="/wallet-risk-checker/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Pharos Builds home"><span class="brand-mark">P</span><span>PHAROS <span class="brand-slash">/</span> RISK CHECK</span></a>
+    <div class="bar-actions"><span class="network"><i></i> PACIFIC · 1672</span><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">DARK</button><a class="top-link" href="https://github.com/PharosNetwork/pharos-mcp" target="_blank" rel="noreferrer">CHAIN MCP ↗</a></div>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero">
+      <div class="eyebrow"><span>READ ONLY</span><i></i><span>BEFORE YOU INTERACT</span></div>
+      <h1>Check the address.<br><em>Know the signals.</em></h1>
+      <p class="hero-copy">Review recent on-chain activity and contract signals for a Pharos wallet or contract—before you send, sign, or approve.</p>
+      <div class="hero-note"><span class="note-mark">↳</span><span>Live chain data. A risk check is a warning tool, not a safety guarantee.</span></div>
+    </section>
+
+    <section class="workspace" aria-label="Wallet risk check">
+      <form id="scan-form" class="scan-card" novalidate>
+        <div class="card-heading"><span class="step">01</span><label for="address-input">WALLET OR CONTRACT</label><span class="network-tag">PHAROS PACIFIC</span></div>
+        <div class="address-field"><input id="address-input" name="address" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="42" placeholder="Paste a 0x address or enter USDC" aria-describedby="address-note"><button class="clear-button" id="clear-address" type="button" aria-label="Clear address">×</button></div>
+        <div class="form-meta"><span id="address-note">Wallets and contract addresses supported</span><span>CHAIN ID 1672</span></div>
+        <div class="preset-row" aria-label="Live example addresses"><span class="micro-label">TRY A LIVE EXAMPLE</span><button type="button" class="preset" data-address="0x1f5178a9d234955f983607b690ceeb2db9ae55bf">Active wallet · low when checked</button><button type="button" class="preset" data-address="USDC">Circle USDC contract</button><button type="button" class="preset" data-address="0x000000000000000000000000000000000000dEaD">Burn address</button></div>
+        <label class="lookback-label" for="lookback">RECENT USDC HISTORY</label>
+        <select id="lookback" name="lookback"><option value="1000">Latest 1,000 blocks</option><option value="3000">Latest 3,000 blocks</option><option value="5000">Latest 5,000 blocks</option></select>
+        <button class="scan-button" id="scan-button" type="submit"><span id="button-label">Check this address</span><span aria-hidden="true">↗</span></button>
+        <p class="privacy-note"><span>⌑</span> Reads Pharos Chain MCP. No wallet connection, private key, or transaction signing.</p>
+      </form>
+
+      <section class="report-card" id="report-card" aria-live="polite" aria-busy="false">
+        <div class="report-topline"><div class="card-heading"><span class="step">02</span><span>RISK REPORT</span></div><span class="report-status" id="report-status">WAITING FOR AN ADDRESS</span></div>
+        <div class="empty-state" id="empty-state"><div class="empty-icon">?</div><h2>Start with an address.</h2><p>The checker will pin its reads to one Pharos block, then list the signals it could verify.</p><div class="empty-line"><span></span><code>ADDRESS → CHAIN DATA → SIGNALS → VERDICT</code></div></div>
+        <div class="loading-state" id="loading-state" hidden><div class="loader"></div><h2>Checking Pharos…</h2><p>Reading the address, official USDC signals, and selected history window.</p></div>
+        <div class="error-state" id="error-state" hidden><div class="error-icon">!</div><div><h2>Could not complete the check.</h2><p id="error-message">Check the address and try again.</p></div></div>
+        <div class="analysis-state" id="analysis-state" hidden>
+          <div class="verdict-row"><div><span class="micro-label">RISK LEVEL</span><h2 id="risk-level">—</h2></div><span class="coverage" id="coverage">—</span><span class="risk-score"><b id="risk-score">0</b><small>/ 100</small></span></div>
+          <div class="score-track"><span id="score-fill"></span></div>
+          <p class="summary" id="summary"></p>
+          <div class="recommendation"><span class="micro-label">RECOMMENDATION</span><p id="recommendation"></p></div>
+          <div class="metrics" id="metrics"></div>
+          <div class="signals-head"><h3>Signals checked</h3><span id="signal-count">0 SIGNALS</span></div>
+          <div class="signals" id="signals"></div>
+          <div class="report-foot"><span id="snapshot">SNAPSHOT —</span><a id="explorer-link" href="#" target="_blank" rel="noreferrer">OPEN ON PHAROSSCAN ↗</a></div>
+          <div class="sources" id="sources"></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="method">
+      <div class="method-title"><span class="step">03</span><div><span class="eyebrow">WHAT THE CHECK COVERS</span><h2>Signals, with<br><em>context attached.</em></h2></div></div>
+      <div class="method-grid">
+        <article><span>01</span><div><h3>Address & contract</h3><p>Reads bytecode, native balance, nonce, pause state, and proxy slots at one pinned block.</p></div></article>
+        <article><span>02</span><div><h3>USDC controls</h3><p>Checks Circle’s Pharos USDC blacklist and currently active allowances found in recent approval events.</p></div></article>
+        <article><span>03</span><div><h3>Recent activity</h3><p>Scans Circle USDC transfers and approvals in the selected, clearly reported block window.</p></div></article>
+      </div>
+      <p class="method-note">Unknown contracts are not automatically called malicious. Recent history is not a full wallet history, and blacklist status only covers Circle USDC. A low result is not a guarantee.</p>
+    </section>
+  </main>
+
+  <footer class="footer"><span>PHAROS BUILDS / 2026</span><span>READ ONLY · PUBLIC CHAIN DATA</span><a href="https://pharos-agent-arena.vercel.app/tasks/wallet-risk-checker" target="_blank" rel="noreferrer">AGENT ARENA TASK ↗</a></footer>
+  <script type="module" src="/wallet-risk-checker/app.js"></script>
+</body>
+</html>

@@ -18,6 +18,7 @@ The home page and demos open in white mode. Use the top-right control to switch 
 | 06 | Doc-Search CLI | Developer Docs MCP | Easy | 50 | [06-doc-search-cli](./06-doc-search-cli/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/doc-search) |
 | 07 | On-Chain Alert Bot | Chain MCP · Telegram | Easy | 50 | [07-on-chain-alert-bot](./07-on-chain-alert-bot/) | [Bot setup](./07-on-chain-alert-bot/README.md) |
 | 08 | dApp Support Agent | Chain MCP | Easy | 50 | [08-dapp-support-agent](./08-dapp-support-agent/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/dapp-support-agent) |
+| 09 | Wallet Risk Checker | Chain MCP | Medium | 100 | [09-wallet-risk-checker](./09-wallet-risk-checker/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/wallet-risk-checker) |
 
 ## Quick start
 
@@ -42,6 +43,8 @@ Deploy the free scheduled Telegram alert bot with `cd 07-on-chain-alert-bot`, th
 
 Run the dApp Support Agent checks with `npm run dapp-support:test`. The demo reads transactions through the public Pharos Chain MCP endpoint and never signs or broadcasts.
 
+Run the Wallet Risk Checker tests with `npm run wallet-risk:test`. Its address and token checks are read-only and use one pinned Pharos block per report.
+
 Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-mcp-onboarding/public`.
 
 ## Layout
@@ -54,6 +57,7 @@ Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-m
     06-doc-search-cli/        sourced Pharos docs answers from a terminal
     07-on-chain-alert-bot/    read-only ERC-20 transfer alerts sent to Telegram
     08-dapp-support-agent/    plain-language failed transaction analysis via Chain MCP
+    09-wallet-risk-checker/   evidence-based wallet and contract risk signals via Chain MCP
     showcase/                 static landing page for the demos
 
 ## Notes

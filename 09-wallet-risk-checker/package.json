@@ -1,0 +1,11 @@
+{
+  "name": "pharos-wallet-risk-checker",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "description": "A read-only, evidence-based Pharos wallet and contract risk checker.",
+  "scripts": { "test": "node --test" },
+  "dependencies": { "@modelcontextprotocol/sdk": "^1.32.1" }
+}
