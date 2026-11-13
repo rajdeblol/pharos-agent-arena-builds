@@ -11,8 +11,7 @@ const I = {
     privacy: "Reads public Pharos chain data. The gate only returns an unsigned transaction after checks pass.",
     report: "SIMULATION REPORT", emptyTitle: "Start with a dry run.",
     emptyCopy: "Choose a sample or enter transaction details. The report will show predicted balance changes and block unsafe execution.",
-    flow: "CALL → GAS → STATE → GATE", methodKicker: "HOW THE GATE WORKS", methodTitle: "Check first.<br><em>Sign only if ready.</em>",
-    methods: ["Simulate", "Run a read-only call at a pinned Pacific block and capture a revert reason when available.", "Estimate", "Show estimated gas, fee, and expected balance or allowance changes.", "Gate", "Keep the unsigned transaction unavailable if the call reverts or gas funds are short."],
+    flow: "CALL → GAS → STATE → GATE",
     go: "Simulate transaction", gate: "Gate check · no send", blocked: "Blocked until checks pass", wait: "Reading Pharos chain…",
     hint: { pass: "1 USDC from a public wallet that can cover the fee.", revert: "Same wallet, but far more USDC than it holds.", gas: "The transfer call passes, but this pool cannot pay its PROS gas fee.", custom: "Enter your own transfer, approve, or native PROS transaction." },
     labels: { from: "FROM · SENDER", to: "TO · RECIPIENT / SPENDER", amount: "AMOUNT" },
@@ -31,8 +30,7 @@ const I = {
     privacy: "Lê dados públicos da Pharos. A trava só libera uma transação sem assinatura após as verificações.",
     report: "RELATÓRIO DA SIMULAÇÃO", emptyTitle: "Comece com uma simulação.",
     emptyCopy: "Escolha um exemplo ou informe os dados. O relatório mostra as mudanças previstas e bloqueia a execução insegura.",
-    flow: "CHAMADA → GÁS → ESTADO → TRAVA", methodKicker: "COMO FUNCIONA A TRAVA", methodTitle: "Confira primeiro.<br><em>Assine só se estiver pronta.</em>",
-    methods: ["Simular", "Executa uma chamada somente leitura em um bloco Pacific e captura o motivo da reversão quando disponível.", "Estimar", "Mostra gás e taxa estimados, além de mudanças previstas no saldo ou na autorização.", "Bloquear", "Não disponibiliza a transação sem assinatura se a chamada reverter ou faltar gás."],
+    flow: "CHAMADA → GÁS → ESTADO → TRAVA",
     go: "Simular transação", gate: "Checar trava · sem envio", blocked: "Bloqueado até passar", wait: "Lendo a rede Pharos…",
     hint: { pass: "1 USDC de uma carteira pública que cobre a taxa.", revert: "A mesma carteira, mas com muito mais USDC do que possui.", gas: "A chamada passa, mas o pool não paga a taxa de gás em PROS.", custom: "Informe uma transferência, aprovação ou transação PROS." },
     labels: { from: "DE · REMETENTE", to: "PARA · DESTINATÁRIO / OPERADOR", amount: "VALOR" },
@@ -85,10 +83,7 @@ function apply() {
   $("empty-title").textContent = t.emptyTitle;
   $("empty-copy").textContent = t.emptyCopy;
   $("flow-label").textContent = t.flow;
-  $("method-kicker").textContent = t.methodKicker;
-  $("method-title").innerHTML = t.methodTitle;
   ["pass", "revert", "gas", "custom"].forEach((key) => { $("sample-" + key).textContent = t.samples[key]; });
-  ["one", "two", "three"].forEach((n, i) => { $("method-" + n + "-title").textContent = t.methods[i * 2]; $("method-" + n + "-copy").textContent = t.methods[i * 2 + 1]; });
   $("amountL").textContent = t.labels.amount;
   $("fromL").textContent = t.labels.from;
   $("toL").textContent = t.labels.to;
