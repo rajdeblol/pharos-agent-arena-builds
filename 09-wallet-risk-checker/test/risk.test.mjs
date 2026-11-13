@@ -9,9 +9,9 @@ import {
   formatUnits,
   getAddressTopic,
   isValidAddress,
-} from "../src/risk.mjs";
-import { scanAddress } from "../src/pharos-mcp.mjs";
-import handler from "../../api/wallet-risk-checker.mjs";
+} from "../src/risk/assessment.mjs";
+import { scanAddress } from "../src/chain/pharos-mcp.mjs";
+import handler from "../src/api/handler.mjs";
 
 const burn = "0x000000000000000000000000000000000000dEaD";
 const wallet = "0x1234567890abcdef1234567890abcdef12345678";

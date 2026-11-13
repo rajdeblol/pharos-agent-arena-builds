@@ -7,7 +7,7 @@ import {
   extractApproval,
   getAddressTopic,
   isValidAddress,
-} from "./risk.mjs";
+} from "../risk/assessment.mjs";
 
 export const PHAROS_MCP_URL = process.env.PHAROS_MCP_URL || "https://mcp.pharos.xyz/mcp";
 const REQUEST_TIMEOUT_MS = 5_000;

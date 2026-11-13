@@ -26,3 +26,17 @@ npm run wallet-risk:test
 ```
 
 The static demo is in `showcase/wallet-risk-checker/`; Vercel serves address scans through `api/wallet-risk-checker.mjs`. The checker never connects a wallet, reads a private key, signs, or broadcasts a transaction.
+
+## Project structure
+
+```text
+src/
+  api/handler.mjs          Request validation and HTTP responses
+  chain/pharos-mcp.mjs     Read-only Pharos Chain MCP client and scan orchestration
+  risk/assessment.mjs      Signal evaluation, scoring, and EVM decoding helpers
+  index.mjs                Supported module exports
+test/
+  risk.test.mjs            Risk, MCP, and API handler tests
+```
+
+The root `api/wallet-risk-checker.mjs` is the Vercel function adapter and forwards to `src/api/handler.mjs`.
