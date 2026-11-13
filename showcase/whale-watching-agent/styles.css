@@ -5,7 +5,5 @@
 @keyframes pulse{50%{box-shadow:0 0 0 7px #42a36e08}}
 @media(max-width:1000px){.summary-row{grid-template-columns:minmax(100px,.8fr) minmax(150px,1.2fr) 1fr 74px}.wallet-stats{gap:7px}.summary-end{font-size:7px}}
 @media(max-width:560px){.watch-status{flex-wrap:wrap;font-size:8px}.watch-status #next-check{margin-left:16px}.summary-row{grid-template-columns:minmax(90px,1fr) 1.4fr 56px;gap:7px}.summary-end{display:none}.wallet-stats{flex-direction:column;gap:5px}.token-stat{font-size:7px}.move-table{min-width:610px}}
-EOF
-node --check 11-whale-watching-agent/lib/watcher.mjs && node --check showcase/whale-watching-agent/app.js && git diff --check && git status --short
 .balance-option{display:flex;align-items:center;gap:10px;margin-top:13px;padding:10px 11px;border:1px solid var(--line);border-radius:8px;cursor:pointer}.balance-option input{width:14px;height:14px;accent-color:var(--blue)}.balance-option span{display:flex;flex-direction:column;gap:2px}.balance-option b{font:9px var(--mono);color:var(--ink)}.balance-option small{font-size:9px;color:var(--muted)}
 .report-status.is-live{display:inline-flex;align-items:center;gap:6px;color:var(--green)}.report-status.is-live::before{content:"";width:7px;height:7px;border-radius:50%;background:#42a36e;box-shadow:0 0 0 4px #42a36e20;animation:pulse 1.8s ease-out infinite}

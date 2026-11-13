@@ -1,17 +1,33 @@
 # Whale Watching Agent
 
-A read-only Pharos Pacific monitor for configurable wallet addresses. It scans recent USDC and WPROS transfer logs, highlights moves above adjustable thresholds, explains the counterparties and size, and summarizes activity for every watched wallet.
+A read-only Pharos Pacific monitor for configurable wallet addresses. It scans USDC and WPROS transfer logs, highlights moves above the chosen thresholds, and summarizes activity for each watched wallet.
 
-## What it covers
+## Project layout
 
-- Track 5–20 configurable EVM addresses. Eight sample wallets are prefilled and can be replaced or renamed.
-- Set separate USDC and WPROS thresholds and scan a recent window of 1,000, 3,000, or 5,000 blocks.
-- Review significant transfers with amount, direction, block, labeled counterparties, and a PharosScan transaction link.
-- Compare recent inflow and outflow for each watched address, including wallets with no matching activity.
+```text
+11-whale-watching-agent/
+├── src/
+│   ├── api/
+│   │   └── handler.mjs       # HTTP entry point for the scan API
+│   └── services/
+│       └── watcher.mjs       # Pharos MCP client, log decoding, and summaries
+├── package.json
+└── README.md
+```
+
+The user interface lives in `showcase/whale-watching-agent/`. The repository-level `api/whale-watching.mjs` forwards Vercel requests to the handler above.
+
+## Features
+
+- Use the preset wallet list or enter custom addresses.
+- Choose USDC and WPROS alert thresholds.
+- Start with a fast 250-block scan, or scan 1,000, 5,000, or 10,000 blocks.
+- Review transfer direction, amount, block, addresses, and transaction links.
+- Keep live monitoring running or stop it at any time.
+- Optionally include token and native balance snapshots.
 
 ## Run locally
 
-From the repository root, run `npm install` and `npx vercel dev` to serve the showcase and `/api/whale-watching` together. The watcher uses the read-only Pharos Chain MCP at `https://mcp.pharos.xyz/mcp`; set `PHAROS_MCP_URL` only to use another compatible endpoint.
+From the repository root, install dependencies and run `npx vercel dev` to serve the showcase and `/api/whale-watching` together. The service uses the read-only Pharos Chain MCP endpoint at `https://mcp.pharos.xyz/mcp`. Set `PHAROS_MCP_URL` to use another compatible endpoint.
 
-The scan never connects a wallet, signs, or broadcasts transactions. Transfer logs and labels are context for review, not proof of intent or ownership.
-
+The app never connects a wallet, signs a transaction, or broadcasts one.
