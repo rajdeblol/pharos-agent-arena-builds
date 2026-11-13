@@ -110,7 +110,10 @@ form.addEventListener("submit", async (event) => {
         lookback: Number($("lookback").value),
       }),
     });
-    const data = await response.json();
+    const body = await response.text();
+    let data;
+    try { data = JSON.parse(body); }
+    catch { throw new Error(response.ok ? "The scan returned an unreadable response." : "The scan service is temporarily unavailable. Try again shortly."); }
     if (!response.ok) throw new Error(data.error || "The scan could not be completed.");
     render(data);
     setState(3);

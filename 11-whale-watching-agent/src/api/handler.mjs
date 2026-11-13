@@ -1,4 +1,4 @@
-import { scanWhales } from "../lib/watcher.mjs";
+import { scanWhales } from "../../lib/watcher.mjs";
 
 export default async function handler(request, response) {
   if (request.method !== "POST") {
