@@ -1,5 +1,4 @@
 const I = {
-  en: {
     kicker: "READ ONLY", before: "BEFORE YOU SIGN", title: "Dry-run the move.<br><em>See what changes.</em>",
     lead: "Simulate a Pacific transaction, review the estimated fee and predicted balances, then decide whether it is ready for your wallet.",
     note: "Simulation only. No wallet connection, signing, or broadcast.", info: "INFO", infoTitle: "BEFORE YOU SIGN",
@@ -17,26 +16,7 @@ const I = {
     labels: { from: "FROM · SENDER", to: "TO · RECIPIENT / SPENDER", amount: "AMOUNT" },
     status: { waiting: "WAITING FOR A SIMULATION", ready: "SIMULATION COMPLETE", failed: "SIMULATION FAILED" },
     coverage: { pass: "CLEAR TO REVIEW", revert: "EXECUTION BLOCKED", gas: "GAS CHECK FAILED" },
-    columns: { label: "BALANCE / STATE", before: "BEFORE", after: "AFTER" }, unsigned: "VIEW UNSIGNED TRANSACTION", meta: "BLOCK" },
-  pt: {
-    kicker: "SOMENTE LEITURA", before: "ANTES DE ASSINAR", title: "Simule a ação.<br><em>Veja o que muda.</em>",
-    lead: "Simule uma transação na Pacific, confira a taxa estimada e os saldos previstos antes de decidir se ela está pronta para sua carteira.",
-    note: "Apenas simulação. Sem conexão de carteira, assinatura ou envio.", info: "INFO", infoTitle: "ANTES DE ASSINAR",
-    infoOne: "As chamadas são somente leitura. O relatório prevê o resultado em um bloco e estima o gás. Nada é assinado nem enviado.",
-    infoTwo: "O estado da rede pode mudar após a simulação. Revise a transação sem assinatura na carteira antes de assinar.",
-    inputs: "DADOS DA TRANSAÇÃO", network: "PHAROS PACIFIC", examples: "TESTE UM EXEMPLO", action: "Ação", token: "Token",
-    samples: { pass: "Aprovada", revert: "Reverte", gas: "Pouco gás", custom: "Personalizada" },
-    metaOne: "CHAMADA + ESTIMATIVA DE GÁS", metaTwo: "NENHUMA TRANSAÇÃO ENVIADA",
-    privacy: "Lê dados públicos da Pharos. A trava só libera uma transação sem assinatura após as verificações.",
-    report: "RELATÓRIO DA SIMULAÇÃO", emptyTitle: "Comece com uma simulação.",
-    emptyCopy: "Escolha um exemplo ou informe os dados. O relatório mostra as mudanças previstas e bloqueia a execução insegura.",
-    flow: "CHAMADA → GÁS → ESTADO → TRAVA",
-    go: "Simular transação", gate: "Checar trava · sem envio", blocked: "Bloqueado até passar", wait: "Lendo a rede Pharos…",
-    hint: { pass: "1 USDC de uma carteira pública que cobre a taxa.", revert: "A mesma carteira, mas com muito mais USDC do que possui.", gas: "A chamada passa, mas o pool não paga a taxa de gás em PROS.", custom: "Informe uma transferência, aprovação ou transação PROS." },
-    labels: { from: "DE · REMETENTE", to: "PARA · DESTINATÁRIO / OPERADOR", amount: "VALOR" },
-    status: { waiting: "AGUARDANDO SIMULAÇÃO", ready: "SIMULAÇÃO CONCLUÍDA", failed: "SIMULAÇÃO FALHOU" },
-    coverage: { pass: "LIBERADO PARA REVISÃO", revert: "EXECUÇÃO BLOQUEADA", gas: "FALHA NO GÁS" },
-    columns: { label: "SALDO / ESTADO", before: "ANTES", after: "DEPOIS" }, unsigned: "VER TRANSAÇÃO SEM ASSINATURA", meta: "BLOCO" },
+    columns: { label: "BALANCE / STATE", before: "BEFORE", after: "AFTER" }, unsigned: "VIEW UNSIGNED TRANSACTION", meta: "BLOCK"
 };
 const DRY = {
   pass: { kind: "transfer", token: "USDC", amount: "1", from: "0x15dDce897D76ac39c188AdE4D353711A60395315", to: "0x000000000000000000000000000000000000dEaD" },
@@ -44,7 +24,6 @@ const DRY = {
   gas: { kind: "transfer", token: "USDC", amount: "1", from: "0x912c9aDe24D44d8922f0866D8Dcb079f1363f647", to: "0x000000000000000000000000000000000000dEaD" },
 };
 const $ = (id) => document.getElementById(id);
-let lang = localStorage.getItem("pharos-lang") === "pt" ? "pt" : "en";
 let sample = "pass";
 let cleared = false;
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -60,8 +39,8 @@ function fill(next) {
   $("tokenWrap").hidden = row.kind === "native";
 }
 function apply() {
-  const t = I[lang];
-  document.documentElement.lang = lang;
+  const t = I;
+  document.documentElement.lang = "en";
   $("kicker").textContent = t.kicker;
   $("before-sign").textContent = t.before;
   $("title").innerHTML = t.title;
@@ -93,56 +72,55 @@ function apply() {
   $("hint").textContent = t.hint[sample];
   $("report-status").textContent = $("out").hidden ? t.status.waiting : t.status.ready;
   document.querySelectorAll("[data-sample]").forEach((button) => button.classList.toggle("on", button.dataset.sample === sample));
-  document.querySelectorAll("[data-lang]").forEach((button) => button.classList.toggle("on", button.dataset.lang === lang));
 }
 function resetReport() {
   cleared = false;
   $("out").hidden = true;
   $("empty-state").hidden = false;
-  $("report-status").textContent = I[lang].status.waiting;
+  $("report-status").textContent = I.status.waiting;
   $("report-card").removeAttribute("data-verdict");
   $("status").className = "status";
   $("status").textContent = "";
 }
 function showRows(rows) {
   if (!rows.length) return "";
-  const t = I[lang];
+  const t = I;
   return `<div class="diff"><div class="diff-row diff-head"><span>${t.columns.label}</span><span>${t.columns.before}</span><span>${t.columns.after}</span><span></span></div>${rows.map((row) => {
     const tone = row.same ? "flat" : String(row.delta || "").startsWith("+") ? "up" : "down";
     return `<div class="diff-row"><span>${esc(row.label)}</span><span>${esc(row.before)}</span><span>${esc(row.after)}</span><b class="${tone}">${esc(row.delta)}</b></div>`;
   }).join("")}</div>`;
 }
 async function run(execute) {
-  const q = new URLSearchParams({ lang, execute: execute ? "1" : "0" });
+  const q = new URLSearchParams({ lang: "en", execute: execute ? "1" : "0" });
   if (DRY[sample]) q.set("sample", sample);
   else {
     q.set("kind", $("kind").value); q.set("token", $("token").value); q.set("amount", $("amount").value.trim());
     q.set("from", $("from").value.trim()); q.set("to", $("to").value.trim());
   }
-  $("status").className = "status busy"; $("status").textContent = I[lang].wait; $("go").disabled = true; $("send").disabled = true;
+  $("status").className = "status busy"; $("status").textContent = I.wait; $("go").disabled = true; $("send").disabled = true;
   $("report-card").setAttribute("aria-busy", "true");
   $("out").hidden = true;
   $("empty-state").hidden = true;
-  $("report-status").textContent = lang === "pt" ? "SIMULANDO" : "SIMULATING";
+  $("report-status").textContent = "SIMULATING";
   try {
     const res = await fetch("/api/dry-run?" + q);
     const data = await res.json();
     if (!res.ok || data.ok === false) throw new Error(data.error || res.statusText);
     $("status").className = "status"; $("status").textContent = ""; $("empty-state").hidden = true; $("out").hidden = false;
-    $("report-status").textContent = I[lang].status.ready;
+    $("report-status").textContent = I.status.ready;
     $("report-card").dataset.verdict = data.verdict;
     $("head").textContent = data.headline;
-    $("coverage").textContent = I[lang].coverage[data.verdict] || I[lang].coverage.revert;
-    const notes = [data.gasLine, data.block != null ? `${I[lang].meta} ${data.block}` : "", data.reason, data.gate].filter(Boolean);
+    $("coverage").textContent = I.coverage[data.verdict] || I.coverage.revert;
+    const notes = [data.gasLine, data.block != null ? `${I.meta} ${data.block}` : "", data.reason, data.gate].filter(Boolean);
     const noteHtml = notes.map((line, i) => `<p class="result-note ${i === notes.length - 1 ? "gate" : ""} ${i === 1 ? "meta" : ""}">${esc(line)}</p>`).join("");
-    const raw = data.unsigned ? `<details class="unsigned"><summary>${I[lang].unsigned}</summary><pre>${esc(JSON.stringify(data.unsigned, null, 2))}</pre></details>` : "";
+    const raw = data.unsigned ? `<details class="unsigned"><summary>${I.unsigned}</summary><pre>${esc(JSON.stringify(data.unsigned, null, 2))}</pre></details>` : "";
     $("lines").innerHTML = showRows(data.rows || []) + `<div class="result-notes">${noteHtml}</div>` + raw;
     cleared = !data.blocked;
-    $("send").textContent = cleared ? I[lang].gate : I[lang].blocked;
+    $("send").textContent = cleared ? I.gate : I.blocked;
     $("send").disabled = !cleared;
   } catch (error) {
-    $("status").className = "status err"; $("status").textContent = error.message; $("report-status").textContent = I[lang].status.failed;
-    cleared = false; $("send").textContent = I[lang].blocked; $("send").disabled = true;
+    $("status").className = "status err"; $("status").textContent = error.message; $("report-status").textContent = I.status.failed;
+    cleared = false; $("send").textContent = I.blocked; $("send").disabled = true;
   } finally { $("go").disabled = false; $("report-card").setAttribute("aria-busy", "false"); }
 }
 $("samples").addEventListener("click", (event) => {
@@ -165,5 +143,4 @@ function setTheme(mode) {
 }
 setTheme(localStorage.getItem("pharos-theme") === "dark" ? "dark" : "light");
 themeButton.addEventListener("click", () => { const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark"; localStorage.setItem("pharos-theme", next); setTheme(next); });
-document.querySelectorAll("[data-lang]").forEach((button) => button.addEventListener("click", () => { lang = button.dataset.lang; localStorage.setItem("pharos-lang", lang); apply(); }));
 fill("pass"); apply();
