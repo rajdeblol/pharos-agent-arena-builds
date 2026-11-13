@@ -1,5 +1,7 @@
 # Dry-Run Executor
 
+Live demo: https://pharos-dry-run-executor-two.vercel.app/
+
 A standalone Pharos Agent Arena build for **Dry-Run Executor** (SkillEngine, Medium, 100 points). Simulates Pacific transactions before signing and never broadcasts or holds a key.
 
 ## What it does

@@ -19,7 +19,7 @@ The home page and demos open in white mode. Use the top-right control to switch 
 | 07 | On-Chain Alert Bot | Chain MCP · Telegram | Easy | 50 | [07-on-chain-alert-bot](./07-on-chain-alert-bot/) | [Bot setup](./07-on-chain-alert-bot/README.md) |
 | 08 | dApp Support Agent | Chain MCP | Easy | 50 | [08-dapp-support-agent](./08-dapp-support-agent/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/dapp-support-agent) |
 | 09 | Wallet Risk Checker | Chain MCP | Medium | 100 | [09-wallet-risk-checker](./09-wallet-risk-checker/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/wallet-risk-checker) |
-| 10 | Dry-Run Executor | SkillEngine | Medium | 100 | [10-dry-run-executor](./10-dry-run-executor/) | Run locally or deploy this folder to Vercel |
+| 10 | Dry-Run Executor | SkillEngine | Medium | 100 | [10-dry-run-executor](./10-dry-run-executor/) | [Open demo](https://pharos-dry-run-executor-two.vercel.app/) |
 
 ## Quick start
 
