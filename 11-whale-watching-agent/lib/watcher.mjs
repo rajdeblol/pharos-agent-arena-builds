@@ -87,8 +87,8 @@ function cleanWatchlist(input) {
     if (!new RegExp(`^\\d+(?:\\.\\d{1,${token.decimals}})?$`).test(value)) throw new Error(`${token.symbol} threshold must be a non-negative number with up to ${token.decimals} decimal places.`);
     thresholds[token.symbol] = value;
   }
-  const lookback = Number(input.lookback ?? 1000);
-  if (![1000, 5000, 10000].includes(lookback)) throw new Error("Choose a history window of 1,000, 5,000, or 10,000 blocks.");
+  const lookback = Number(input.lookback ?? 250);
+  if (![250, 1000, 5000, 10000].includes(lookback)) throw new Error("Choose a history window of 250, 1,000, 5,000, or 10,000 blocks.");
   return { addresses: [...unique.values()], thresholds, lookback };
 }
 

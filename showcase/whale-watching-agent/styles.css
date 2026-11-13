@@ -8,3 +8,4 @@
 EOF
 node --check 11-whale-watching-agent/lib/watcher.mjs && node --check showcase/whale-watching-agent/app.js && git diff --check && git status --short
 .balance-option{display:flex;align-items:center;gap:10px;margin-top:13px;padding:10px 11px;border:1px solid var(--line);border-radius:8px;cursor:pointer}.balance-option input{width:14px;height:14px;accent-color:var(--blue)}.balance-option span{display:flex;flex-direction:column;gap:2px}.balance-option b{font:9px var(--mono);color:var(--ink)}.balance-option small{font-size:9px;color:var(--muted)}
+.report-status.is-live{display:inline-flex;align-items:center;gap:6px;color:var(--green)}.report-status.is-live::before{content:"";width:7px;height:7px;border-radius:50%;background:#42a36e;box-shadow:0 0 0 4px #42a36e20;animation:pulse 1.8s ease-out infinite}
