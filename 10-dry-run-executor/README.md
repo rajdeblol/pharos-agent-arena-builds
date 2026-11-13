@@ -39,7 +39,3 @@ Create a Vercel project with this directory (`10-dry-run-executor`) as its **Roo
 ## Safety
 
 Simulation is an estimate at a particular block and can differ from eventual execution. The app has no wallet connection, private key, signer, or transaction broadcast path. A passing result means the unsigned transaction is clear to review/sign elsewhere; it is not a guarantee of future execution.
-
-## Reference
-
-Inspired by [juhzinho/pharos-dry-run](https://github.com/juhzinho/pharos-dry-run). The Arena brief is [Dry-Run Executor](https://pharos-agent-arena.vercel.app/tasks/dry-run-executor).
