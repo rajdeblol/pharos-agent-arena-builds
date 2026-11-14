@@ -61,6 +61,15 @@ async function readSellerConfig() {
   return config;
 }
 
+async function readWalletSnapshot(address) {
+  const blockNumber = await publicClient.getBlockNumber();
+  const [nativeBalance, tokenBalance] = await Promise.all([
+    publicClient.getBalance({ address, blockNumber }),
+    publicClient.readContract({ address: TOKEN, abi: [{ type: "function", name: "balanceOf", stateMutability: "view", inputs: [{ name: "account", type: "address" }], outputs: [{ type: "uint256" }] }], functionName: "balanceOf", args: [address], blockNumber }),
+  ]);
+  return { address, blockNumber: blockNumber.toString(), nativeBalanceWei: nativeBalance.toString(), usdcBalanceAtomic: tokenBalance.toString() };
+}
+
 async function buyOne({ endpoint, config, buyer, totalBudget, cap, spent, trace }) {
   const url = new URL(endpoint.path, SELLER);
   url.searchParams.set("block", config.chain.latestBlock);
@@ -143,8 +152,15 @@ export default async function handler(req, res) {
   const payments = [];
   let spent = 0n;
   let stopReason = "";
+  let targetAddress = "";
+  let walletSnapshot = null;
+  let walletSnapshotError = "";
   try {
     const config = await readSellerConfig();
+    try { targetAddress = getAddress(String(req.body?.targetAddress || config.buyer || "").trim()); }
+    catch { return res.status(400).json({ error: "Enter a valid Pharos wallet address to inspect." }); }
+    try { walletSnapshot = await readWalletSnapshot(targetAddress); }
+    catch (error) { walletSnapshotError = error.message || "Could not read this address from Pharos Atlantic."; }
     for (const endpoint of ENDPOINTS) {
       const result = await buyOne({ endpoint, config, buyer, totalBudget: requestedBudget, cap: requestedCap, spent, trace });
       if (result.refused) {
@@ -161,8 +177,8 @@ export default async function handler(req, res) {
     const activity = results.find((result) => result.endpoint.path.endsWith("activity-summary"))?.data;
     const summary = complete ? `Pharos block ${snapshot.blockNumber} reported base fee ${snapshot.baseFeePerGasWei} wei. Blocks ${activity.windowStartBlock}–${activity.snapshotBlock} contained ${activity.totalTransactions} transactions.` : stopReason || "The run stopped before all resources were purchased.";
     const publicResults = results.map((item) => ({ endpoint: { path: item.endpoint.path, label: item.endpoint.label }, amountAtomic: String(item.amount), data: item.data, transaction: item.transaction, settlement: item.settlement, verification: item.verification }));
-    return res.status(200).json({ runId, scenario: profile.label, outcome: complete ? "TASK_COMPLETE" : "STOPPED_AT_BUDGET_OR_GUARD", summary, results: publicResults, payments, trace, spentAtomic: String(spent), totalBudgetAtomic: String(requestedBudget), perCallCapAtomic: String(requestedCap), remainingAtomic: String(requestedBudget > spent ? requestedBudget - spent : 0n), agentAddress: buyer.address, network: NETWORK, mode: "LIVE_ATLANTIC_TESTNET", explorer: EXPLORER, note: "Server-side burner wallet: no browser wallet connection. Real Atlantic test-USDC is spent only after a quote passes the run limits." });
+    return res.status(200).json({ runId, scenario: profile.label, outcome: complete ? "TASK_COMPLETE" : "STOPPED_AT_BUDGET_OR_GUARD", summary, results: publicResults, payments, trace, spentAtomic: String(spent), totalBudgetAtomic: String(requestedBudget), perCallCapAtomic: String(requestedCap), remainingAtomic: String(requestedBudget > spent ? requestedBudget - spent : 0n), agentAddress: buyer.address, targetAddress, walletSnapshot, walletSnapshotError, network: NETWORK, mode: "LIVE_ATLANTIC_TESTNET", explorer: EXPLORER, note: "Server-side burner wallet: no browser wallet connection. Real Atlantic test-USDC is spent only after a quote passes the run limits." });
   } catch (error) {
-    return res.status(502).json({ runId, error: error.message || "Live agent run failed safely.", payments, trace, spentAtomic: String(spent), totalBudgetAtomic: String(requestedBudget), perCallCapAtomic: String(requestedCap), agentAddress: buyer.address, network: NETWORK });
+    return res.status(502).json({ runId, error: error.message || "Live agent run failed safely.", payments, trace, spentAtomic: String(spent), totalBudgetAtomic: String(requestedBudget), perCallCapAtomic: String(requestedCap), agentAddress: buyer.address, targetAddress, walletSnapshot, walletSnapshotError, network: NETWORK });
   }
 }
