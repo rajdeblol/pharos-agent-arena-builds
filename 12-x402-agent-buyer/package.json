@@ -1,0 +1,8 @@
+{
+  "name": "pharos-x402-agent-buyer",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A budgeted x402 agent buyer demo with idempotent payment retries.",
+  "engines": { "node": ">=20" }
+}

@@ -21,6 +21,7 @@ The home page and demos open in white mode. Use the top-right control to switch 
 | 09 | Wallet Risk Checker | Chain MCP | Medium | 100 | [09-wallet-risk-checker](./09-wallet-risk-checker/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/wallet-risk-checker) |
 | 10 | Dry-Run Executor | SkillEngine | Medium | 100 | [10-dry-run-executor](./10-dry-run-executor/) | [Open demo](https://pharos-dry-run-executor-two.vercel.app/) |
 | 11 | Whale-Watching Agent | Chain MCP | Medium | 100 | [11-whale-watching-agent](./11-whale-watching-agent/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/whale-watching-agent) |
+| 12 | x402 Agent Buyer | Payments · x402 | Hard | 200 | [12-x402-agent-buyer](./12-x402-agent-buyer/) | [Open demo](https://pharos-x402-agent-buyer-raj.vercel.app/) |
 
 ## Quick start
 
@@ -62,6 +63,7 @@ Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-m
     09-wallet-risk-checker/   evidence-based wallet and contract risk signals via Chain MCP
     10-dry-run-executor/    read-only transaction simulation and execution gate via Chain MCP
     11-whale-watching-agent/ read-only significant transfer reports and watchlist summaries
+    12-x402-agent-buyer/    budgeted x402-style paid API buyer with safe mock retries
     showcase/                 static landing page for the demos
 
 ## Notes
@@ -71,6 +73,7 @@ Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-m
 - The scanner is read-only and simulation-only. It never signs or submits swaps; token-to-USD and slippage inputs are estimates.
 - Build 10 uses Pharos Chain MCP for read-only transaction simulation; it never signs or broadcasts. The unsigned transaction is exposed only after simulation and gas-funding checks pass.
 - Build 11 scans recent USDC and WPROS transfer logs through Pharos Chain MCP. It does not connect a wallet, sign, or broadcast.
+- Build 12 demonstrates x402 price discovery, per-call and total budget checks, and idempotent retries with mock receipts only; no real payment is made.
 - The linked demos are deployed separately. This repository's Vercel project serves the collection showcase. Build 10 is a standalone Vercel app; set its project root to `10-dry-run-executor` to deploy the demo and API together.
 - Approval and point totals are awarded by Agent Arena reviewers; this repository makes no claim that either submission has been approved.
 
