@@ -80,7 +80,7 @@ This is a protocol-flow simulation, not an on-chain payment implementation. It d
 
 ## Links
 
-- [Live demo](https://pharos-x402-agent-buyer-raj.vercel.app/)
+- [Live demo](https://pharos-agent-arena-builds.vercel.app/x402-agent-buyer/)
 - [Source folder](https://github.com/rajdeblol/pharos-agent-arena-builds/tree/main/12-x402-agent-buyer)
 - [Arena task brief](https://pharos-agent-arena.vercel.app/tasks/x402-agent-buyer)
 - [x402 v2 HTTP transport specification](https://github.com/x402-foundation/x402/blob/main/specs/transports-v2/http.md)

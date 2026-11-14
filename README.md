@@ -21,7 +21,7 @@ The home page and demos open in white mode. Use the top-right control to switch 
 | 09 | Wallet Risk Checker | Chain MCP | Medium | 100 | [09-wallet-risk-checker](./09-wallet-risk-checker/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/wallet-risk-checker) |
 | 10 | Dry-Run Executor | SkillEngine | Medium | 100 | [10-dry-run-executor](./10-dry-run-executor/) | [Open demo](https://pharos-dry-run-executor-two.vercel.app/) |
 | 11 | Whale-Watching Agent | Chain MCP | Medium | 100 | [11-whale-watching-agent](./11-whale-watching-agent/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/whale-watching-agent) |
-| 12 | x402 Agent Buyer | Payments · x402 | Hard | 200 | [12-x402-agent-buyer](./12-x402-agent-buyer/) | [Open demo](https://pharos-x402-agent-buyer-raj.vercel.app/) |
+| 12 | x402 Agent Buyer | Payments · x402 | Hard | 200 | [12-x402-agent-buyer](./12-x402-agent-buyer/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/x402-agent-buyer/) |
 
 ## Quick start
 
