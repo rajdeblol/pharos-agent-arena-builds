@@ -32,5 +32,11 @@
     "api/x402-receipt.mjs": {
       "maxDuration": 20
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/saga-api/:path*",
+      "destination": "https://pharos-saga-executor.shoupeorg.workers.dev/api/:path*"
+    }
+  ]
 }
