@@ -1,81 +1,28 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Pharos Saga Executor</title>
-  <meta name="description" content="A persistent approve, escrow, deposit saga with on-chain compensation on Pharos Atlantic Testnet.">
-  <link rel="icon" href="/pharos-logo.png">
-  <link rel="stylesheet" href="/style.css">
-  <style>
-    .section-label{background:var(--blue);color:#fff;padding:7px 12px;font-size:9px;font-weight:bold;letter-spacing:.8px}
-    .section-label.error-label{background:var(--red)}
-    .step .receipt{display:block;margin-top:5px;color:#555;font:8px/1.5 "Courier New",monospace}
-    .error-row{background:#fff0ee}
-    .review-grid{display:grid;grid-template-columns:repeat(3,1fr);border:2px solid #111;background:#fff}
-    .review-grid>div{padding:8px;border-right:1px solid #111}.review-grid>div:last-child{border-right:0}
-    .review-grid b{display:block;font-size:9px}.review-grid span{font:9px/1.5 "Courier New",monospace}
-    @media(max-width:720px){.review-grid{grid-template-columns:1fr}.review-grid>div{border-right:0;border-bottom:1px solid #111}}
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffffff">
+<meta name="description" content="A recoverable approve, escrow, deposit saga on Pharos Atlantic testnet.">
+<title>Saga Executor — Pharos Builds</title>
+<link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<main class="desktop">
-  <header class="desktop-header">
-    <a class="brand" href="/"><span class="logo-box"><img src="/pharos-logo.png" alt="Pharos logo"></span><span>PHAROS<span class="brand-sub">SAGA EXECUTOR</span></span></a>
-    <span class="desktop-badge">ATLANTIC TESTNET / 688689</span>
-  </header>
-
-  <section class="app-window">
-    <div class="titlebar"><span><b class="app-icon">⇄</b> SAGA EXECUTOR.EXE</span><span class="window-chrome"><i>_</i><i>□</i><i>×</i></span></div>
-    <div class="menubar"><span>Persistent Workflow</span><span>OFFICIAL CHAIN MCP</span><span class="menu-right">TESTNET ONLY</span></div>
-    <div class="window-body">
-      <section class="intro">
-        <p class="kicker">PHAROS AGENT ARENA / RECOVERABLE EXECUTION</p>
-        <h1>APPROVE → ESCROW → DEPOSIT<span class="cursor">_</span></h1>
-        <p>Run a real three-step test-token saga or force the vault to reject the deposit and watch compensating transactions refund escrow and revoke allowance.</p>
-      </section>
-
-      <div class="notice"><b>⚠ VALUELESS TEST TOKEN</b><span>Transactions use a dedicated server-side Atlantic signer. No user wallet, key, or real funds.</span></div>
-
-      <fieldset class="control-panel">
-        <legend>01 · RUN CONFIGURATION</legend>
-        <label for="amount">AMOUNT (SGT)<input id="amount" value="1" inputmode="decimal" autocomplete="off"></label>
-        <div class="controls">
-          <button class="primary" id="success" type="button">START SUCCESSFUL SAGA →</button>
-          <button class="classic" id="failure" type="button">START PREFLIGHT FAILURE →</button>
-          <button class="danger" id="receipt-failure" type="button">START RECEIPT-VERIFIED FAILURE →</button>
-          <button class="classic" id="resume" type="button" disabled>RESUME / RECOVER</button>
-        </div>
-      </fieldset>
-
-      <section class="telemetry">
-        <div><span>CONNECTION</span><strong id="connection" data-state="idle">LOADING</strong></div>
-        <div><span>LATEST BLOCK</span><strong id="block">—</strong></div>
-        <div><span>SAGA STATE</span><strong id="state">—</strong></div>
-        <div><span>DEMO SIGNER</span><strong id="owner">—</strong></div>
-      </section>
-
-      <section class="history-window">
-        <div class="output-title"><span>02 · RETRY / RECONCILIATION EVIDENCE</span><span>SIMULATED TRANSPORT FAILURE</span></div>
-        <div class="review-grid" id="retry-evidence"><div><b>LOADING</b><span>Deterministic evidence…</span></div></div>
-      </section>
-
-      <section class="output-window" aria-live="polite">
-        <div class="output-title"><span>03 · PERSISTENT_STATE.LOG</span><span id="saga-id">NO SAGA SELECTED</span></div>
-        <div class="summary" id="summary"><b>SYSTEM READY</b><span>Select a controlled testnet run. Every receipt and expected state is verified before the next step.</span></div>
-        <div class="steps" id="steps"></div>
-        <div class="balances" id="balances"></div>
-      </section>
-
-      <section class="history-window">
-        <div class="output-title"><span>04 · RECENT SAGAS</span><button class="mini" id="refresh" type="button">REFRESH</button></div>
-        <div id="history" class="history"></div>
-      </section>
-    </div>
-    <div class="statusbar"><span><i class="status-dot"></i><b id="system-status">SYSTEM STARTING</b></span><span id="mcp-status">MCP CONNECTING</span><span>TESTNET / READ + CONTROLLED WRITE</span></div>
-  </section>
-  <footer><span>PHAROS AGENT ARENA · SAGA EXECUTOR</span><a href="https://github.com/PharosNetwork/pharos-mcp" target="_blank" rel="noopener noreferrer">OFFICIAL MCP SOURCE ↗</a></footer>
+<header class="top"><a class="brand" href="/"><span class="badge">P</span><span>PHAROS <span class="muted">/ BUILDS</span></span></a><div class="top-actions"><span class="network"><i></i> ATLANTIC · 688689</span><button class="toggle" id="theme-toggle" type="button">DARK</button><a href="https://pharos-agent-arena.vercel.app/tasks/saga-executor" target="_blank" rel="noreferrer">ARENA ↗</a></div></header>
+<main class="wrap">
+<section class="hero"><div class="eyebrow"><b>BUILD 13 / EXECUTE</b>　·　SKILLENGINE　·　CHAIN MCP</div><h1>Multi-step work,<br><em>with a way back.</em></h1><p>An agent moves test tokens through approval, escrow, and deposit. Each step waits for its receipt. If the deposit fails, it refunds the escrow and clears the approval.</p><div class="notice"><b>Atlantic testnet demo:</b> runs use valueless SGT and a dedicated server signer. No browser wallet is connected. Starting a run sends real testnet transactions; no mainnet assets are used.</div></section>
+<section class="section"><div class="section-head"><span class="n">01</span><h2>How the saga moves</h2><span class="mono">RECEIPT CHECK BEFORE EACH STEP</span></div><div class="flow"><article><span>01</span><b>Approve</b><small>Allow escrow to use SGT</small></article><i>→</i><article><span>02</span><b>Lock</b><small>Move SGT into recoverable escrow</small></article><i>→</i><article><span>03</span><b>Deposit</b><small>Credit the test vault</small></article><div class="flow-recovery"><b>IF DEPOSIT FAILS</b><span>Refund escrow → revoke approval → verify balances</span></div></div></section>
+<section class="section"><div class="section-head"><span class="n">02</span><h2>Run a demo</h2><span class="mono">SERVER AGENT · NO WALLET POPUP</span></div><div class="grid">
+<div class="box"><div class="box-top"><div><span class="label">DEDICATED TEST SIGNER</span><h3 id="owner">Loading signer…</h3></div><span class="pill" id="connection" data-state="idle">CONNECTING</span></div><p class="sub">The executor persists each state and checks the chain before it continues.</p>
+<div class="scenarios"><button class="scenario" id="success" type="button"><b>Complete the saga</b><span>Approve, lock, then deposit. All three receipts and final state are checked.</span></button><button class="scenario" id="failure" type="button"><b>Recover before broadcast</b><span>Force a vault rejection, then refund and revoke without sending a doomed deposit.</span></button><button class="scenario scenario-wide" id="receipt-failure" type="button"><b>Show a mined failure + recovery</b><span>Controlled test: mine a known reverting deposit (status 0x0), then verify compensation.</span></button></div>
+<label class="field"><span>AMOUNT (SGT)</span><input id="amount" value="1" inputmode="decimal" autocomplete="off"></label><div class="actions"><button class="primary" id="resume" type="button" disabled>Resume selected saga</button><span class="mono" id="state">READY</span></div><p class="fine">The failure broadcast is limited to the reference demo contracts and at most 1 SGT. It spends testnet gas from the dedicated signer.</p></div>
+<div class="box result-box"><div class="result-top"><div><span class="label">LATEST CHAIN SNAPSHOT</span><h3 id="state-title">Saga status</h3></div><span class="mono">BLOCK <b id="block">—</b></span></div><div class="summary" id="summary"><b>SYSTEM READY</b><span>Select a run. Each dependent step is verified before the next one starts.</span></div><div class="balances" id="balances"></div><div class="mcp-line"><span id="system-status">SYSTEM STARTING</span><span id="mcp-status">MCP CONNECTING</span></div></div>
+</div></section>
+<section class="section"><div class="section-head"><span class="n">03</span><h2>Execution record</h2><span class="mono" id="saga-id">NO SAGA SELECTED</span></div><div class="record" id="steps"><div class="empty">State changes, transaction hashes, receipts, and recovery checks will appear here.</div></div></section>
+<section class="section"><div class="section-head"><span class="n">04</span><h2>Retry policy</h2><span class="mono">TRANSIENT READ ERRORS ONLY</span></div><div class="retry-grid" id="retry-evidence"><div><b>Loading retry evidence…</b></div></div><p class="fine">Retry timings are deterministic simulated evidence. State-changing transactions are reconciled by hash and receipt, never blindly resent.</p></section>
+<section class="section"><div class="section-head"><span class="n">05</span><h2>Recent sagas</h2><button class="secondary" id="refresh" type="button">Refresh</button></div><div class="ledger" id="history"><div class="empty">Loading saved runs…</div></div></section>
+<footer class="footer"><span>PHAROS BUILDS / 2026</span><span>ATLANTIC TESTNET · VALUELESS TEST TOKEN</span><a href="https://github.com/rajdeblol/pharos-agent-arena-builds/tree/main/13-saga-executor">SOURCE ↗</a></footer>
 </main>
-<script src="/app.js" defer></script>
-</body>
-</html>
+<script src="./app.js" defer></script><script>
+const t=document.getElementById('theme-toggle');function theme(v){document.documentElement.dataset.theme=v;t.textContent=v==='dark'?'WHITE':'DARK';document.querySelector('meta[name="theme-color"]').content=v==='dark'?'#0c0d10':'#ffffff'}theme(localStorage.getItem('pharos-theme')==='dark'?'dark':'light');t.addEventListener('click',()=>{const v=document.documentElement.dataset.theme==='dark'?'light':'dark';localStorage.setItem('pharos-theme',v);theme(v)});
+</script>
+</body></html>
