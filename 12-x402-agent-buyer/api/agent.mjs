@@ -38,9 +38,25 @@ async function verifyReceipt({ hash, account, merchant, amount }) {
 }
 
 async function readSellerConfig() {
-  const response = await fetch(`${SELLER}/api/config`, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(15000) });
-  if (!response.ok) throw new Error(`Seller status returned HTTP ${response.status}.`);
-  const config = await response.json();
+  let config;
+  let lastStatus;
+  let lastError;
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      const response = await fetch(`${SELLER}/api/config`, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(10000), cache: "no-store" });
+      if (response.ok) {
+        config = await response.json();
+        break;
+      }
+      lastStatus = response.status;
+      if (response.status < 500 || attempt === 3) throw new Error(`Seller status returned HTTP ${response.status}.`);
+    } catch (error) {
+      lastError = error;
+      if (attempt === 3 || (lastStatus && lastStatus < 500)) throw error;
+    }
+    await new Promise((resolve) => setTimeout(resolve, attempt * 350));
+  }
+  if (!config) throw lastError || new Error(`Seller status returned HTTP ${lastStatus || "an unknown error"}.`);
   if (config.paymentOperational !== true || config.chain?.network !== NETWORK || config.paymentAsset?.address?.toLowerCase() !== TOKEN.toLowerCase()) throw new Error(config.blocker || "Seller is not operational on the expected Atlantic testnet token.");
   return config;
 }
