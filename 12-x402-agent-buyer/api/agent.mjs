@@ -89,7 +89,7 @@ async function buyOne({ endpoint, config, buyer, totalBudget, cap, spent, trace 
 
   const account = buyer.address;
   const balance = await publicClient.readContract({ address: TOKEN, abi: [{ type: "function", name: "balanceOf", stateMutability: "view", inputs: [{ name: "account", type: "address" }], outputs: [{ type: "uint256" }] }], functionName: "balanceOf", args: [account] });
-  if (balance < amount) throw new Error(`Agent wallet needs ${atomicUsd(amount)} USDC for this quote; current test-USDC balance is too low.`);
+  if (balance < amount) return { blocked: true, endpoint, amount, balance, reason: `Quote is ${atomicUsd(amount)} USDC; the server agent has ${atomicUsd(balance)} USDC. No payment was signed.` };
   const paymentPayload = await buyer.client.createPaymentPayload(required);
   const paymentHeader = encodePaymentSignatureHeader(paymentPayload);
   let paidResponse;
@@ -163,6 +163,11 @@ export default async function handler(req, res) {
     catch (error) { walletSnapshotError = error.message || "Could not read this address from Pharos Atlantic."; }
     for (const endpoint of ENDPOINTS) {
       const result = await buyOne({ endpoint, config, buyer, totalBudget: requestedBudget, cap: requestedCap, spent, trace });
+      if (result.blocked) {
+        stopReason = result.reason;
+        payments.push({ what: endpoint.label, priceAtomic: String(result.amount), runningTotalAtomic: String(spent), availableBalanceAtomic: String(result.balance), decision: "BLOCKED · NO PAYMENT", reason: result.reason });
+        break;
+      }
       if (result.refused) {
         stopReason = result.reason;
         payments.push({ what: endpoint.label, priceAtomic: String(result.amount), runningTotalAtomic: String(spent), decision: "REFUSED", reason: result.reason });

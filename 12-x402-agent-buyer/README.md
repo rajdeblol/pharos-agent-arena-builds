@@ -24,7 +24,7 @@ The API used by this build is [pharos-x402-paywalled-api](https://github.com/sho
 
 The token is Pharos Atlantic test USDC at `0xcfC8330f4BCAB529c625D12781b1C19466A9Fc8B` (6 decimals). Receipts are checked against this token, the agent address, merchant address, and exact amount.
 
-The buyer page includes an editable **Pharos wallet to inspect** field and a separate read-only lookup button. It defaults to the seller API's public demo buyer address (`0x29946933492Ca11744941Bc12630852498dAd8D7`), which opens on PharosScan. Judges can enter any other valid Atlantic address and read its PHRS and test-USDC balances at the current block. This does not change the server-side payer or add a paid API call.
+The buyer page includes a free live preview and an editable **Pharos wallet to inspect** field with a separate read-only lookup button. The preview fetches both current HTTP 402 quotes, reads the inspected wallet and server agent balances, and checks the quotes against the selected budget and per-call cap without signing or spending. The address defaults to the seller API's public demo buyer (`0x29946933492Ca11744941Bc12630852498dAd8D7`), which opens on PharosScan. Judges can enter any other valid Atlantic address and read its PHRS and test-USDC balances at the current block. This does not change the server-side payer or add a paid API call.
 
 ## Scenarios and limits
 
