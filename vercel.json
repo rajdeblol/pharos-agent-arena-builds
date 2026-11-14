@@ -20,6 +20,9 @@
     "api/x402-config.mjs": {
       "maxDuration": 15
     },
+    "api/x402-agent.mjs": {
+      "maxDuration": 60
+    },
     "api/x402-paid/*.mjs": {
       "maxDuration": 60
     },

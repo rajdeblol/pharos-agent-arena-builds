@@ -1,3 +1,5 @@
+import { privateKeyToAccount } from "viem/accounts";
+
 const SELLER_ORIGIN = "https://pharos-x402-paywalled-api.shoupeorg.workers.dev";
 const ALLOWED_ROUTES = new Set(["/paid/network-snapshot", "/paid/activity-summary"]);
 const TOKEN = "0xcfC8330f4BCAB529c625D12781b1C19466A9Fc8B";
@@ -8,7 +10,9 @@ export async function configHandler(_req, res) {
     const response = await fetch(`${SELLER_ORIGIN}/api/config`, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(12000) });
     const config = await response.json();
     res.status(response.status).setHeader("Cache-Control", "no-store");
-    return res.json({ ...config, sellerOrigin: SELLER_ORIGIN });
+    let agentAddress = null;
+    try { if (process.env.AGENT_PRIVATE_KEY) agentAddress = privateKeyToAccount(process.env.AGENT_PRIVATE_KEY).address; } catch {}
+    return res.json({ ...config, sellerOrigin: SELLER_ORIGIN, agentReady: Boolean(agentAddress), agentAddress });
   } catch {
     return res.status(502).json({ error: "Pharos x402 seller status could not be reached." });
   }

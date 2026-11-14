@@ -6,6 +6,7 @@
   "functions": {
     "api/config.mjs": { "maxDuration": 15 },
     "api/receipt.mjs": { "maxDuration": 20 },
+    "api/agent.mjs": { "maxDuration": 60 },
     "api/paid/*.mjs": { "maxDuration": 60 }
   }
 }

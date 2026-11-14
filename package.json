@@ -3,7 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "workspaces": ["01-read-contract-state", "02-policy-gatekeeper", "03-event-log-monitor", "06-doc-search-cli", "07-on-chain-alert-bot", "08-dapp-support-agent", "09-wallet-risk-checker", "11-whale-watching-agent"],
+  "workspaces": [
+    "01-read-contract-state",
+    "02-policy-gatekeeper",
+    "03-event-log-monitor",
+    "06-doc-search-cli",
+    "07-on-chain-alert-bot",
+    "08-dapp-support-agent",
+    "09-wallet-risk-checker",
+    "11-whale-watching-agent",
+    "12-x402-agent-buyer"
+  ],
   "scripts": {
     "build": "npm run build --workspace=pharos-whale-watching-agent",
     "contract": "npm run start --workspace=pharos-contract-field-notes",
@@ -15,5 +25,7 @@
     "dapp-support:test": "npm test --workspace=pharos-dapp-support-agent",
     "wallet-risk:test": "npm test --workspace=pharos-wallet-risk-checker"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }
