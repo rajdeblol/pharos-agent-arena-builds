@@ -50,7 +50,7 @@ The Worker handles one state-changing saga step per request and saves progress i
 - `../showcase/saga-executor/` — the Pharos Builds version of the UI, styled to match the other builds.
 - Root `vercel.json` — proxies `/saga-api/*` to the hosted Atlantic demo Worker so the browser can call it from the Pharos Builds page.
 
-The deployed showcase currently uses the reference project's hosted Worker for execution and persistent D1 storage. This repository includes the Worker source as well, for inspection and independent deployment with your own Worker, D1 database, and signer secret.
+The deployed showcase currently uses a hosted Atlantic Worker for saga execution and persistent D1 storage. This repository also includes a standalone Worker implementation that you can deploy with your own Worker, D1 database, and signer secret.
 
 ## Contracts and chain evidence
 
