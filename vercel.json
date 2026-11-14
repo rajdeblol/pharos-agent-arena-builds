@@ -5,9 +5,26 @@
   "outputDirectory": "showcase",
   "cleanUrls": true,
   "functions": {
-    "api/docs-search.mjs": { "maxDuration": 60 },
-    "api/dapp-support.mjs": { "maxDuration": 30 },
-    "api/wallet-risk-checker.mjs": { "maxDuration": 30 },
-    "api/whale-watching.mjs": { "maxDuration": 60 }
+    "api/docs-search.mjs": {
+      "maxDuration": 60
+    },
+    "api/dapp-support.mjs": {
+      "maxDuration": 30
+    },
+    "api/wallet-risk-checker.mjs": {
+      "maxDuration": 30
+    },
+    "api/whale-watching.mjs": {
+      "maxDuration": 60
+    },
+    "api/x402-config.mjs": {
+      "maxDuration": 15
+    },
+    "api/x402-paid/*.mjs": {
+      "maxDuration": 60
+    },
+    "api/x402-receipt.mjs": {
+      "maxDuration": 20
+    }
   }
 }

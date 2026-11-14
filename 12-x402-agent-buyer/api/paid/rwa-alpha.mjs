@@ -1,7 +1,0 @@
-import { handlePaidEndpoint } from "../../lib/paid-api.mjs";
-export default async function handler(req, res) {
-  const response = await handlePaidEndpoint("/api/paid/rwa-alpha", new Request(`https://${req.headers.host || "localhost"}${req.url}`, { method: req.method, headers: req.headers }));
-  res.status(response.status);
-  for (const [name, value] of response.headers) res.setHeader(name, value);
-  return res.send(await response.text());
-}

@@ -1,86 +1,64 @@
 # x402 Agent Buyer
 
-A small Pharos-themed demo of an agent buying data only after it reads the price and checks its limits. The agent requests two paid resources, can combine them into a short RWA brief, records each payment decision, and refuses a purchase that would cross either budget guard.
+A wallet-based buyer that calls two x402-protected Pharos Atlantic endpoints. It reads each live quote, applies the per-call cap and total budget, asks the connected wallet to sign only an approved amount, and verifies the returned transaction against the token's `Transfer` log.
 
-> **Demo mode only.** The resource handlers speak an x402 v2-shaped HTTP exchange (`PAYMENT-REQUIRED`, `PAYMENT-SIGNATURE`, and `PAYMENT-RESPONSE`), but the buyer uses a mock proof. The returned `SIMULATED-*` receipt IDs are not transaction hashes. No wallet, private key, facilitator, USDC transfer, or chain settlement is used. This is not a production payment client and its mock payment proof is not accepted by a real x402 facilitator.
+**Live demo:** [Open buyer](https://pharos-agent-arena-builds.vercel.app/x402-agent-buyer/)
 
-## Demo cases
+## Live payment flow
 
-- **Complete the brief — $0.010 budget:** buys a $0.003 RWA alpha signal and a $0.005 market brief, then returns a combined result with risks and a suggested next step. On the second resource, the server deliberately drops the first acknowledgement after recording the mock settlement. The buyer retries once using the same idempotency key. The endpoint returns the original receipt, and the ledger counts it once.
-- **Stop at the budget — $0.004 budget:** buys the $0.003 signal. The next endpoint quotes $0.005, so the buyer refuses before attaching payment. The run shows the refusal reason and leaves $0.001.
+1. The buyer reads the seller's public status and current Atlantic block.
+2. It requests `/paid/network-snapshot` and `/paid/activity-summary` through a same-origin proxy. Each route first returns HTTP 402 and a `PAYMENT-REQUIRED` challenge.
+3. Before opening the wallet, the buyer checks the challenge's network, token, merchant, listed price, per-call cap, and remaining run budget.
+4. The wallet signs an EIP-3009 `TransferWithAuthorization`. The private key never leaves the wallet. The facilitator submits the authorization and pays network gas; the payer's test USDC is transferred to the seller.
+5. The buyer retries the same HTTP request with the signed x402 payload. If the transport response is lost, retries reuse that exact authorization; the buyer never signs a replacement for the same attempt.
+6. The buyer decodes `PAYMENT-RESPONSE`, looks up the receipt on Atlantic, and confirms the exact USDC `Transfer` before recording the purchase as confirmed.
 
-The per-call cap is a separate input. For example, lowering it below $0.005 causes the agent to refuse the market brief even when the total budget is high enough.
+The API is hosted by [shoupeorg/pharos-x402-paywalled-api](https://github.com/shoupeorg/pharos-x402-paywalled-api). Its public status endpoint currently reports the seller and facilitator operational on `eip155:688689`.
 
-## What happens in a run
+## Paid resources
 
-1. `POST /api/agent` starts one named job with a budget and per-call cap.
-2. The agent requests a price challenge from `/api/paid/rwa-alpha` or `/api/paid/market-brief`. The unpaid endpoint returns HTTP 402, a base64 `PAYMENT-REQUIRED` header, and the same challenge as JSON for convenient display.
-3. The buyer reads the accepted network, exact price, token, and resource URL. It checks the per-call cap and remaining job budget before it creates a payment proof.
-4. When the guards pass, the buyer retries the resource with a base64 `PAYMENT-SIGNATURE` header and an `Idempotency-Key`.
-5. The endpoint returns the purchased demo data and base64 `PAYMENT-RESPONSE`. For the second resource in the completion scenario, the first acknowledgement is intentionally dropped after the endpoint stores the mock receipt. Retrying with the same key returns that same receipt.
-6. The agent adds the amount to the running total once, returns the job output, and logs each payment or refusal.
+| Route | Price | Data |
+|---|---:|---|
+| `/paid/network-snapshot` | `0.001 USDC` | Pinned Pharos block, base fee, and token balances |
+| `/paid/activity-summary` | `0.002 USDC` | Transaction counts and gas use across a three-block window |
 
-The server dispatches the two resource handlers in-process so the demo behaves consistently on serverless hosting. The resource handlers are also exposed as their own `/api/paid/...` routes. This exercises the negotiation and retry logic without requiring an external facilitator or payer key.
+The configured token is Pharos Atlantic test USDC, `0xcfC8330f4BCAB529c625D12781b1C19466A9Fc8B` (6 decimals). The receipt lookup checks the exact token contract, sender, recipient, and amount.
 
-## Endpoints
+## Run scenarios
 
-| Route | Unpaid response | Price | Data returned after mock payment |
-|---|---|---:|---|
-| `GET /api/paid/rwa-alpha` | `402 Payment Required` | $0.003 | RWA signal, confidence and sample window |
-| `GET /api/paid/market-brief` | `402 Payment Required` | $0.005 | Market summary, risks and next step |
-| `POST /api/agent` | Agent run | — | Price checks, ledger, trace and combined job result |
+- **Complete the brief:** default budget `0.005 USDC`, cap `0.002`. After two wallet confirmations, the two resources cost `0.003 USDC` total.
+- **Stop at the budget:** budget `0.001 USDC`, cap `0.002`. The buyer can purchase the first route; it refuses the second `0.002 USDC` quote before asking for another signature.
 
-Prices are displayed in USD for readability and sent in six-decimal test-token units in the simulated challenge. `eip155:688689` identifies Pharos Atlantic Testnet; the UI explicitly labels the exchange as simulation. The test token address is metadata for the demo challenge, not a claim that a real token was transferred.
+Change the limits before starting. Equality is allowed; only a quote that exceeds a limit is refused. Completed payments and refusals are kept in the browser's local ledger. The ledger stores tx hashes and decisions, never payment signatures.
 
-## Budget and retry rules
+## Wallet and funding
 
-For each resource, the buyer performs these checks in order:
+Use MetaMask or another browser-injected EVM wallet on **Pharos Atlantic Testnet** (chain ID `688689`). The page can request the network switch. The complete scenario spends `0.003 USDC` test tokens if both wallet signatures are approved; the budget-stop scenario spends `0.001 USDC` if the first signature is approved. The wallet displays each exact authorization. You need test USDC in the connected account; the facilitator covers transaction gas.
 
-```text
-if price > perCallCap: refuse
-else if runningTotal + price > totalBudget: refuse
-else: make the paid retry
-```
-
-The check uses integer token base units for the quoted price. The running total only changes after a successful response with a receipt. A refusal is still written to the payment ledger with its quoted price, reason, and unchanged total.
-
-Every call receives a run-scoped idempotency key. The mock endpoint stores the successful receipt against that key before it simulates the lost acknowledgement. If the buyer retries, the endpoint returns the stored receipt instead of producing another payment. The buyer also checks the transaction/receipt ID before incrementing its total. In production, this state would need durable storage with an atomic uniqueness constraint; this demo keeps the idempotency store in memory for one run.
-
-## Payment ledger
-
-The page records the run ID, resource bought (or refused), quoted price, receipt ID, decision, and running total. A refused purchase has no transaction. The ledger lives in browser memory and resets on reload; it is not a permanent accounting record.
-
-The request trace shows the 402 discovery and each paid retry, including the retried request. This makes it possible to see that the same mock receipt is returned on retry while spend is counted once.
+This page does not collect a seed phrase or private key, and it never starts a payment without an explicit wallet signature. A signature authorizes a specific amount, recipient, token, and short expiry. Cancel or reject it in the wallet to stop.
 
 ## Run locally
 
-Requires Node.js 20 or newer and the Vercel CLI.
+Requires Node.js 20+ and Vercel CLI.
 
 ```sh
 cd 12-x402-agent-buyer
-npm install
 npx vercel dev
 ```
 
-Open the local URL printed by Vercel. The static UI is in `public/`; API routes are in `api/`. No environment variables are needed for mock mode.
+Open the local URL in a browser with a funded Atlantic wallet. `api/upstream.mjs` proxies only the configured seller's status, two paid endpoints, and the public RPC receipt lookup; it is not an open proxy. No private-key or facilitator secrets are used by this buyer.
 
-To deploy this task separately, import the builds repository into Vercel and choose `12-x402-agent-buyer` as the project root.
+## Scope and limits
 
-## Arena requirement map
-
-| Requirement | This demo |
-|---|---|
-| Call at least two x402 endpoints | Two separate paid-resource routes return their own 402 price challenge |
-| Enforce a total budget and per-call cap | The agent checks both limits before attaching mock payment data |
-| Log price, purchase, transaction and running total | The ledger records each simulated receipt and refusal; IDs are labelled simulated |
-| Retry safely | The second completion purchase simulates a dropped acknowledgement and retries with the same idempotency key |
-| Complete and budget-stop examples | Both scenarios are included and selectable from the page |
-
-This is a protocol-flow simulation, not an on-chain payment implementation. It demonstrates the decisions and retry behavior, while clearly marking the payment proof and receipt as mock data.
+- This is an Atlantic testnet flow, not a mainnet checkout.
+- The seller and facilitator belong to the linked third-party API. Their uptime and settlement rules are outside this buyer's control.
+- Spending guard state is held in the browser for one run. The connected wallet remains the final signer; server-side task limits are not a substitute for the buyer's own cap checks.
+- An ambiguous response is retried with the same authorization. If a receipt is not yet visible, the run stops and marks settlement pending rather than issuing another payment.
 
 ## Links
 
 - [Live demo](https://pharos-agent-arena-builds.vercel.app/x402-agent-buyer/)
-- [Source folder](https://github.com/rajdeblol/pharos-agent-arena-builds/tree/main/12-x402-agent-buyer)
-- [Arena task brief](https://pharos-agent-arena.vercel.app/tasks/x402-agent-buyer)
-- [x402 v2 HTTP transport specification](https://github.com/x402-foundation/x402/blob/main/specs/transports-v2/http.md)
+- [This repo's source folder](https://github.com/rajdeblol/pharos-agent-arena-builds/tree/main/12-x402-agent-buyer)
+- [Live seller API source](https://github.com/shoupeorg/pharos-x402-paywalled-api)
+- [Arena task](https://pharos-agent-arena.vercel.app/tasks/x402-agent-buyer)
+- [Pharos x402 docs](https://docs.pharos.xyz/developer-guide/x402)

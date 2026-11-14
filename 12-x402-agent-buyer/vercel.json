@@ -3,5 +3,9 @@
   "buildCommand": null,
   "outputDirectory": "public",
   "cleanUrls": true,
-  "functions": { "api/agent.mjs": { "maxDuration": 30 } }
+  "functions": {
+    "api/config.mjs": { "maxDuration": 15 },
+    "api/receipt.mjs": { "maxDuration": 20 },
+    "api/paid/*.mjs": { "maxDuration": 60 }
+  }
 }

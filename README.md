@@ -63,7 +63,7 @@ Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-m
     09-wallet-risk-checker/   evidence-based wallet and contract risk signals via Chain MCP
     10-dry-run-executor/    read-only transaction simulation and execution gate via Chain MCP
     11-whale-watching-agent/ read-only significant transfer reports and watchlist summaries
-    12-x402-agent-buyer/    budgeted x402-style paid API buyer with safe mock retries
+    12-x402-agent-buyer/    live x402 buyer with Atlantic USDC receipts and budget guards
     showcase/                 static landing page for the demos
 
 ## Notes
@@ -73,7 +73,7 @@ Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-m
 - The scanner is read-only and simulation-only. It never signs or submits swaps; token-to-USD and slippage inputs are estimates.
 - Build 10 uses Pharos Chain MCP for read-only transaction simulation; it never signs or broadcasts. The unsigned transaction is exposed only after simulation and gas-funding checks pass.
 - Build 11 scans recent USDC and WPROS transfer logs through Pharos Chain MCP. It does not connect a wallet, sign, or broadcast.
-- Build 12 demonstrates x402 price discovery, per-call and total budget checks, and idempotent retries with mock receipts only; no real payment is made.
+- Build 12 signs real Atlantic test-USDC authorizations in the connected wallet, checks the resulting token Transfer receipt, and stops before any quote that exceeds its budget or per-call cap. No private key is stored by the app.
 - Most linked demos are deployed separately. This repository's Vercel project serves the showcase and Build 12 at `/x402-agent-buyer/`. Build 10 is also a standalone Vercel app; set its project root to `10-dry-run-executor` to deploy the demo and API together.
 - Approval and point totals are awarded by Agent Arena reviewers; this repository makes no claim that either submission has been approved.
 

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "A budgeted x402 agent buyer demo with idempotent payment retries.",
-  "engines": { "node": ">=20" }
+  "description": "A live Pharos Atlantic x402 buyer with wallet-signed test-USDC payments and strict budget checks.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {}
 }
