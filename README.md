@@ -22,6 +22,7 @@ The home page and demos open in white mode. Use the top-right control to switch 
 | 10 | Dry-Run Executor | SkillEngine | Medium | 100 | [10-dry-run-executor](./10-dry-run-executor/) | [Open demo](https://pharos-dry-run-executor-two.vercel.app/) |
 | 11 | Whale-Watching Agent | Chain MCP | Medium | 100 | [11-whale-watching-agent](./11-whale-watching-agent/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/whale-watching-agent) |
 | 12 | x402 Agent Buyer | Payments · x402 | Hard | 200 | [12-x402-agent-buyer](./12-x402-agent-buyer/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/x402-agent-buyer/) |
+| 13 | Saga Executor | SkillEngine · Chain MCP | Hard | 200 | [13-saga-executor](./13-saga-executor/) | [Open demo](https://pharos-agent-arena-builds.vercel.app/saga-executor/) |
 
 ## Quick start
 
@@ -64,6 +65,7 @@ Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-m
     10-dry-run-executor/    read-only transaction simulation and execution gate via Chain MCP
     11-whale-watching-agent/ read-only significant transfer reports and watchlist summaries
     12-x402-agent-buyer/    live x402 buyer with Atlantic USDC receipts and budget guards
+    13-saga-executor/      receipt-verified approve, escrow, deposit saga with recovery
     showcase/                 static landing page for the demos
 
 ## Notes
@@ -73,8 +75,9 @@ Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-m
 - The scanner is read-only and simulation-only. It never signs or submits swaps; token-to-USD and slippage inputs are estimates.
 - Build 10 uses Pharos Chain MCP for read-only transaction simulation; it never signs or broadcasts. The unsigned transaction is exposed only after simulation and gas-funding checks pass.
 - Build 11 scans recent USDC and WPROS transfer logs through Pharos Chain MCP. It does not connect a wallet, sign, or broadcast.
-- Build 12 signs real Atlantic test-USDC authorizations in the connected wallet, checks the resulting token Transfer receipt, and stops before any quote that exceeds its budget or per-call cap. No private key is stored by the app.
-- Most linked demos are deployed separately. This repository's Vercel project serves the showcase and Build 12 at `/x402-agent-buyer/`. Build 10 is also a standalone Vercel app; set its project root to `10-dry-run-executor` to deploy the demo and API together.
+- Build 12 checks each live x402 quote against its budget and per-call cap before paying; see its README for the current payment flow.
+- Build 13 runs on Atlantic Testnet with valueless SGT. It waits for each receipt and verified contract state, then refunds escrow and revokes approval if deposit fails. Runs use a server-side test signer; no browser wallet is connected.
+- Most linked demos are deployed separately. This repository's Vercel project serves the showcase, Build 12 at `/x402-agent-buyer/`, and Build 13 at `/saga-executor/`. Build 10 is also a standalone Vercel app; set its project root to `10-dry-run-executor` to deploy the demo and API together.
 - Approval and point totals are awarded by Agent Arena reviewers; this repository makes no claim that either submission has been approved.
 
 ## References
