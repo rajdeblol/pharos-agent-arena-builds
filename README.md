@@ -74,7 +74,7 @@ Serve the onboarding log with `python3 -m http.server 4177 --directory 04-docs-m
 - Build 10 uses Pharos Chain MCP for read-only transaction simulation; it never signs or broadcasts. The unsigned transaction is exposed only after simulation and gas-funding checks pass.
 - Build 11 scans recent USDC and WPROS transfer logs through Pharos Chain MCP. It does not connect a wallet, sign, or broadcast.
 - Build 12 demonstrates x402 price discovery, per-call and total budget checks, and idempotent retries with mock receipts only; no real payment is made.
-- The linked demos are deployed separately. This repository's Vercel project serves the collection showcase. Build 10 is a standalone Vercel app; set its project root to `10-dry-run-executor` to deploy the demo and API together.
+- Most linked demos are deployed separately. This repository's Vercel project serves the showcase and Build 12 at `/x402-agent-buyer/`. Build 10 is also a standalone Vercel app; set its project root to `10-dry-run-executor` to deploy the demo and API together.
 - Approval and point totals are awarded by Agent Arena reviewers; this repository makes no claim that either submission has been approved.
 
 ## References
